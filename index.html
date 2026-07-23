@@ -208,18 +208,25 @@
         padding:9px 13px; border:2px solid var(--tomato); color:var(--tomato);
         font:500 11px "DM Mono",monospace; letter-spacing:.08em; transform:rotate(-3deg);
       }
-      .detail { margin-top:14px; display:grid; grid-template-columns:1.2fr 1fr; min-height:226px; overflow:hidden; border:1px solid var(--line); border-radius:22px; background:var(--white); }
-      .detail-main,.detail-side { padding:30px 32px; }
-      .detail-main h2 { margin:10px 0; font-size:25px; letter-spacing:-.055em; }
-      .detail-main p { margin:0; max-width:550px; color:var(--muted); font-size:14px; line-height:1.64; }
-      .detail-side { border-left:1px solid var(--line); background:#efe4d3; }
-      .detail-side h3 { margin:5px 0 14px; font-size:13px; }
       .check { display:flex; gap:8px; margin:9px 0; font-size:13px; }.check b{color:var(--tomato);}
       .actions { display:flex; gap:8px; margin-top:20px; }
       .primary,.secondary { display:inline-block; padding:11px 14px; border-radius:10px; border:0; font-size:13px; font-weight:700; text-decoration:none; }
       .primary { background:var(--tomato); color:#fff; }.secondary{background:transparent;color:var(--ink);border:1px solid var(--line);}
       .primary:disabled { background:#b9afa4; cursor:default; }
-      .map-hint { align-self:center; color:var(--tomato-deep); font-size:12px; font-weight:700; }
+      .stage-dialog {
+        width:min(680px,calc(100% - 32px)); padding:0; overflow:hidden; border:1px solid var(--ink);
+        border-radius:24px; background:var(--white); color:var(--ink); box-shadow:0 30px 100px rgba(40,37,33,.28);
+      }
+      .stage-dialog::backdrop { background:rgba(40,37,33,.46); backdrop-filter:blur(4px); }
+      .dialog-close {
+        position:absolute; z-index:2; right:16px; top:16px; width:38px; height:38px;
+        border:1px solid var(--line); border-radius:50%; background:var(--white); color:var(--ink); font-size:20px;
+      }
+      .dialog-main { padding:34px 34px 26px; }
+      .dialog-main h2 { margin:10px 44px 10px 0; font-size:28px; letter-spacing:-.055em; }
+      .dialog-main>p { margin:0; color:var(--muted); font-size:14px; line-height:1.65; }
+      .dialog-checks { padding:24px 34px 27px; border-top:1px solid var(--line); background:#efe4d3; }
+      .dialog-checks h3 { margin:5px 0 14px; font-size:14px; }
       .journey-summary {
         margin-top:18px; overflow:hidden; border:1px solid var(--ink); border-radius:24px;
         background:var(--white); animation:summary-in .55s both;
@@ -231,22 +238,12 @@
         padding:26px 28px 20px; border-bottom:1px solid var(--line);
       }
       .summary-head h3 { margin:7px 0 0; font-size:26px; letter-spacing:-.055em; }
-      .summary-tabs { display:flex; padding:4px; border-radius:999px; background:#eee3d5; }
-      .summary-tab { padding:9px 15px; border:0; border-radius:999px; background:transparent; color:var(--muted); font-size:12px; font-weight:700; }
-      .summary-tab.active { background:var(--ink); color:#fff; }
+      .summary-prompt { max-width:310px; margin:0; color:var(--muted); font-size:12px; line-height:1.5; }
       .summary-panel { padding:0 28px 28px; }
       .summary-panel[hidden] { display:none; }
-      .summary-row {
-        display:grid; grid-template-columns:62px 155px 1.25fr .85fr; gap:18px; align-items:center;
-        min-height:92px; border-bottom:1px solid var(--line);
-      }
-      .summary-row:last-child { border-bottom:0; }
-      .summary-no { color:var(--tomato); font:500 11px "DM Mono",monospace; }
-      .summary-row h4 { margin:0; font-size:16px; letter-spacing:-.04em; }
-      .summary-row p { margin:0; color:var(--muted); font-size:12px; line-height:1.5; }
-      .summary-output { padding:8px 10px; border-radius:9px; background:#efe5d7; color:var(--ink)!important; font-weight:700; }
       .overall-flow { display:grid; grid-template-columns:repeat(5,1fr); padding-top:26px; }
-      .overall-step { position:relative; min-height:168px; padding:18px 16px; border:1px solid var(--line); border-right:0; background:#fbf5ec; }
+      .overall-step { position:relative; min-height:168px; padding:18px 16px; border:1px solid var(--line); border-right:0; background:#fbf5ec; color:var(--ink); text-align:left; transition:background .2s,transform .2s; }
+      .overall-step:hover { z-index:3; background:#f4dfca; transform:translateY(-3px); }
       .overall-step:first-child { border-radius:16px 0 0 16px; }
       .overall-step:last-child { border-right:1px solid var(--line); border-radius:0 16px 16px 0; }
       .overall-step:not(:last-child)::after {
@@ -266,11 +263,12 @@
       footer{display:flex;justify-content:space-between;padding:23px 0 32px;color:var(--muted);font-size:11px}
 
       @media (max-width:900px) {
-        .game-hero{grid-template-columns:1fr;gap:30px;padding-top:44px}.game-copy h1{max-width:650px}.game-copy>p{max-width:600px}.game-area{grid-template-columns:1fr}.pizza-board{max-width:430px}.piece-tray{grid-template-columns:repeat(5,1fr)}.pizza-piece{display:block;text-align:center;padding:7px}.piece-icon{width:50px}.piece-meta b{font-size:11px}.route-note{width:180px}.detail,.report{grid-template-columns:1fr}.detail-side{border-left:0;border-top:1px solid var(--line)}.summary-row{grid-template-columns:50px 130px 1fr}.summary-output{grid-column:3}.overall-flow{grid-template-columns:1fr}.overall-step,.overall-step:first-child,.overall-step:last-child{min-height:0;border:1px solid var(--line);border-bottom:0;border-radius:0}.overall-step:first-child{border-radius:16px 16px 0 0}.overall-step:last-child{border-bottom:1px solid var(--line);border-radius:0 0 16px 16px}.overall-step:not(:last-child)::after{content:"↓";right:24px;top:auto;bottom:-11px;transform:none}
+        .game-hero{grid-template-columns:1fr;gap:30px;padding-top:44px}.game-copy h1{max-width:650px}.game-copy>p{max-width:600px}.game-area{grid-template-columns:1fr}.pizza-board{max-width:430px}.piece-tray{grid-template-columns:repeat(5,1fr)}.pizza-piece{display:block;text-align:center;padding:7px}.piece-icon{width:50px}.piece-meta b{font-size:11px}.route-note{width:180px}.report{grid-template-columns:1fr}.overall-flow{grid-template-columns:1fr}.overall-step,.overall-step:first-child,.overall-step:last-child{min-height:0;border:1px solid var(--line);border-bottom:0;border-radius:0}.overall-step:first-child{border-radius:16px 16px 0 0}.overall-step:last-child{border-bottom:1px solid var(--line);border-radius:0 0 16px 16px}.overall-step:not(:last-child)::after{content:"↓";right:24px;top:auto;bottom:-11px;transform:none}
       }
       @media (max-width:620px) {
-        .shell{width:min(100% - 32px,1180px)}header{height:64px}nav a:not(.nav-pill){display:none}.game-hero{min-height:auto;padding:38px 0 50px}.game-copy h1{font-size:42px}.game-panel{padding:16px;border-radius:22px}.piece-tray{grid-template-columns:repeat(3,1fr)}.pizza-piece:nth-child(4),.pizza-piece:nth-child(5){grid-column:auto}.journey-head{display:block}.journey-head p{margin-top:9px}.route-board{border-radius:20px}.route-note{width:145px;padding:9px;font-size:11px}.route-stop{width:112px;min-height:66px}.route-stop strong{font-size:13px}.detail-main,.detail-side,.report{padding:24px}.actions{flex-wrap:wrap}.summary-head{display:block;padding:22px}.summary-tabs{margin-top:16px;width:max-content}.summary-panel{padding:0 20px 20px}.summary-row{grid-template-columns:42px 1fr;gap:8px;padding:15px 0}.summary-row p,.summary-output{grid-column:2}.form{display:grid}footer{display:grid;gap:7px}
+        .shell{width:min(100% - 28px,1180px)}header{height:64px}nav a:not(.nav-pill){display:none}.game-hero{min-height:auto;padding:34px 0 46px}.game-copy h1{font-size:40px}.game-panel{padding:14px;border-radius:20px}.game-area{gap:15px}.pizza-board{max-width:330px}.piece-tray{grid-template-columns:repeat(2,1fr);gap:9px}.pizza-piece{display:grid;grid-template-columns:43px 1fr;min-height:66px;text-align:left;padding:7px 9px;touch-action:manipulation}.pizza-piece:last-child{grid-column:1 / -1}.piece-icon{width:43px;height:43px}.piece-meta b{font-size:12px}.pizza-slot{touch-action:manipulation}.touch-mode .pizza-piece.selected{transform:translateY(-3px) scale(1.02);box-shadow:0 0 0 4px rgba(215,84,61,.13)}.journey-head{display:block}.journey-head p{margin-top:9px}.route-board{border-radius:20px}.route-note{width:125px;padding:8px;font-size:10px}.route-stop{width:104px;min-height:64px;padding:10px}.route-stop strong{font-size:12px}.report{padding:24px}.actions{flex-wrap:wrap}.summary-head{display:block;padding:22px}.summary-prompt{margin-top:10px}.summary-panel{padding:0 18px 18px}.stage-dialog{width:100%;max-height:88dvh;margin:auto 0 0;border-radius:22px 22px 0 0}.dialog-main,.dialog-checks{padding:25px 22px}.dialog-main h2{font-size:24px}.form{display:grid}footer{display:grid;gap:7px}
       }
+      @media (pointer:coarse) { .pizza-piece:hover{transform:none}.route-stop{touch-action:manipulation}.overall-step{min-height:72px} }
       @media (prefers-reduced-motion:reduce) { *,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;transition-duration:.01ms!important;} }
     </style>
   </head>
@@ -380,37 +378,28 @@
           <div class="route-note map-item" data-stage="5" style="left:19%;top:1600px"><b>CHECK 03</b>판매 속도로 재주문 시점을 정해요.</div>
           <button class="route-stop map-item" data-stage="5" style="left:88%;top:1640px"><small>STAGE 05</small><strong>입고·판매</strong></button>
         </div>
-        <article class="detail" id="detail" aria-live="polite">
-          <div class="detail-main"><div class="micro">상품 탐색 리포트</div><h2>상품 찾기, 여기서부터 알아볼게요.</h2><p>관심이 모이는 상품을 찾는 데서 시작해요. 검색 추이, 가격대, 리뷰의 불만을 보고 후보를 천천히 좁혀볼 수 있습니다.</p><div class="actions"><span class="map-hint">↑ 지도 위 ‘상품 찾기’ 버튼을 누르면 다음 길이 열려요.</span><a class="secondary" href="#report">후보 상품 살펴보기</a></div></div>
-          <div class="detail-side"><div class="micro">Before you move on</div><h3>이것만 먼저 확인해요</h3><div class="check"><b>✓</b><span>가격대와 판매자 수를 비교해요</span></div><div class="check"><b>✓</b><span>반복되는 리뷰 불만을 찾아요</span></div><div class="check"><b>✓</b><span>후보 상품을 세 개 남겨요</span></div></div>
-        </article>
         <section class="journey-summary" id="journey-summary" hidden aria-labelledby="summary-title">
           <div class="summary-head">
-            <div><div class="micro">Route recap</div><h3 id="summary-title">다 읽었다면, 한 번에 정리해요.</h3></div>
-            <div class="summary-tabs" role="tablist" aria-label="소싱 여정 요약 보기">
-              <button class="summary-tab active" role="tab" aria-selected="true" aria-controls="summary-by-stage" data-summary="stage">단계별 요약</button>
-              <button class="summary-tab" role="tab" aria-selected="false" aria-controls="summary-overall" data-summary="overall">전체 흐름</button>
-            </div>
+            <div><div class="micro">Route recap</div><h3 id="summary-title">전체 소싱 여정 한눈에 보기</h3></div>
+            <p class="summary-prompt">각 단계를 누르면 체크리스트와 상세 설명이 열립니다.</p>
           </div>
-          <div class="summary-panel" id="summary-by-stage" role="tabpanel">
-            <div class="summary-row"><span class="summary-no">01</span><h4>상품 찾기</h4><p>검색 추이와 리뷰 불만을 보며 해결할 문제가 있는 상품을 좁힙니다.</p><p class="summary-output">결과물 · 후보 상품 3개</p></div>
-            <div class="summary-row"><span class="summary-no">02</span><h4>상품성 검증</h4><p>수요·경쟁·총원가를 함께 계산해 팔 수 있는 근거를 확인합니다.</p><p class="summary-output">결과물 · GO / WAIT 판단</p></div>
-            <div class="summary-row"><span class="summary-no">03</span><h4>소싱·배송</h4><p>공급처 조건과 샘플을 확인하고 배대지·포워딩 비용을 비교합니다.</p><p class="summary-output">결과물 · 샘플과 운송 견적</p></div>
-            <div class="summary-row"><span class="summary-no">04</span><h4>수입 준비</h4><p>HS 코드, 인증 대상, 관세와 통관 서류를 발주 전에 점검합니다.</p><p class="summary-output">결과물 · 수입 체크리스트</p></div>
-            <div class="summary-row"><span class="summary-no">05</span><h4>입고·판매</h4><p>검수·보관·출고비를 반영해 판매가와 재주문 기준을 운영합니다.</p><p class="summary-output">결과물 · 판매 운영 기준</p></div>
-          </div>
-          <div class="summary-panel" id="summary-overall" role="tabpanel" hidden>
+          <div class="summary-panel">
             <div class="overall-flow">
-              <div class="overall-step"><small>FIND</small><h4>문제를 찾기</h4><p>고객이 반복해서 겪는 불편에서 상품 후보를 찾습니다.</p></div>
-              <div class="overall-step"><small>JUDGE</small><h4>팔 근거 만들기</h4><p>수요와 총원가를 확인해 진행 여부를 판단합니다.</p></div>
-              <div class="overall-step"><small>MOVE</small><h4>상품 확보하기</h4><p>샘플과 공급처를 정하고 알맞은 운송 방식을 고릅니다.</p></div>
-              <div class="overall-step"><small>IMPORT</small><h4>안전하게 들이기</h4><p>인증·관세·통관 서류를 발주 전에 마무리합니다.</p></div>
-              <div class="overall-step"><small>SELL</small><h4>팔고 반복하기</h4><p>입고부터 재주문까지 숫자로 운영 기준을 만듭니다.</p></div>
+              <button class="overall-step" data-open-stage="1"><small>01 · FIND</small><h4>문제를 찾기</h4><p>고객이 반복해서 겪는 불편에서 상품 후보를 찾습니다.</p></button>
+              <button class="overall-step" data-open-stage="2"><small>02 · JUDGE</small><h4>팔 근거 만들기</h4><p>수요와 총원가를 확인해 진행 여부를 판단합니다.</p></button>
+              <button class="overall-step" data-open-stage="3"><small>03 · MOVE</small><h4>상품 확보하기</h4><p>샘플과 공급처를 정하고 알맞은 운송 방식을 고릅니다.</p></button>
+              <button class="overall-step" data-open-stage="4"><small>04 · IMPORT</small><h4>안전하게 들이기</h4><p>인증·관세·통관 서류를 발주 전에 마무리합니다.</p></button>
+              <button class="overall-step" data-open-stage="5"><small>05 · SELL</small><h4>팔고 반복하기</h4><p>입고부터 재주문까지 숫자로 운영 기준을 만듭니다.</p></button>
             </div>
             <div class="summary-rule"><b>한 줄 기준</b> · 후보를 찾고 → 팔 근거를 확인하고 → 샘플과 운송을 확정한 뒤 → 수입 요건을 통과하면 → 판매와 재주문으로 이어갑니다.</div>
           </div>
         </section>
       </section>
+
+      <dialog class="stage-dialog" id="stage-dialog" aria-labelledby="dialog-title">
+        <form method="dialog"><button class="dialog-close" aria-label="상세 내용 닫기">×</button></form>
+        <div id="dialog-content"></div>
+      </dialog>
 
       <section class="report" id="report">
         <div><div class="micro" style="color:var(--sun)">When you are ready</div><h2>내 상황에 맞는<br />소싱·물류 리포트</h2><p>중국·베트남 소싱을 준비 중이라면 상품, 물량, 현재 단계를 기준으로 다음에 확인할 정보를 정리해 보내드립니다.</p></div>
@@ -432,8 +421,15 @@
       const progressFill = document.getElementById('progress-fill');
       const pizzaBoard = document.getElementById('pizza-board');
       const pizzaWrap = document.getElementById('pizza-wrap');
+      const touchMode = window.matchMedia('(pointer: coarse)').matches;
       let selectedPiece = null;
       let completed = 0;
+
+      if (touchMode) {
+        document.body.classList.add('touch-mode');
+        pieces.forEach(piece=>{ piece.draggable=false; });
+        message.innerHTML = '<b>조각을 먼저 선택하고</b> 피자의 알맞은 빈자리를 눌러주세요.';
+      }
 
       function setSelected(piece) {
         if (piece.classList.contains('used')) return;
@@ -524,41 +520,42 @@
         {tag:'통관·인증 리포트',title:'들여오기 전에 위험을 확인해요.',text:'품목별 인증과 통관 주의사항을 미리 살펴봅니다. 확정 판단이 필요한 항목은 관세사나 인증기관의 검토를 연결해요.',checks:['HS 코드와 관부가세를 추정해요','품목별 인증 여부를 확인해요','인보이스와 패킹리스트를 점검해요'],action:'수입 전 체크하기'},
         {tag:'입고·판매 리포트',title:'보관부터 재주문까지 연결해요.',text:'보관비와 출고비, 판매 채널 수수료까지 포함해 마진을 확인합니다. 물량이 늘면 창고·풀필먼트 상담을 검토할 수 있어요.',checks:['보관료와 입출고비를 나눠봐요','목표 마진으로 판매가를 계산해요','재주문 기준을 기록해요'],action:'보관·출고 알아보기'}
       ];
-      const detail = document.getElementById('detail');
       const routeBoard = document.getElementById('route-board');
       const routeStops = [...document.querySelectorAll('.route-stop')];
       const journeySummary = document.getElementById('journey-summary');
+      const stageDialog = document.getElementById('stage-dialog');
+      const dialogContent = document.getElementById('dialog-content');
       let unlockedStage = 1;
-      let currentStage = 1;
 
-      function renderStage(stage) {
-        currentStage = stage;
+      function updateRouteStops(activeStage=unlockedStage) {
         routeStops.forEach(stop=>{
           const stopStage = Number(stop.dataset.stage);
-          stop.classList.toggle('active',stopStage===stage);
+          stop.classList.toggle('active',stopStage===activeStage);
           stop.classList.toggle('current',stopStage===unlockedStage && unlockedStage<=5);
           stop.querySelector('small').textContent = `STAGE ${String(stopStage).padStart(2,'0')}${stopStage===unlockedStage && unlockedStage<=5?' · OPEN':''}`;
+          stop.setAttribute('aria-label',stopStage===unlockedStage && unlockedStage<=5
+            ? `${stepNames[stopStage]} 단계 완료하고 다음 길 열기`
+            : `${stepNames[stopStage]} 단계 상세 보기`);
         });
-        const report = reports[stage-1];
-        const isCurrent = stage === unlockedStage;
-        const hint = unlockedStage === 6
-          ? '다섯 단계의 길을 모두 열었어요.'
-          : isCurrent
-            ? `↑ 지도 위 ‘${stepNames[stage]}’ 버튼을 누르면 ${stage===5?'전체 지도가 완성돼요.':'다음 길이 열려요.'}`
-            : '완료한 단계예요. 지도에서 붉게 움직이는 버튼을 찾아보세요.';
-        detail.innerHTML=`<div class="detail-main"><div class="micro">${report.tag}</div><h2>${report.title}</h2><p>${report.text}</p><div class="actions"><span class="map-hint">${hint}</span><a class="secondary" href="#report">${report.action}</a></div></div><div class="detail-side"><div class="micro">Before you move on</div><h3>이것만 먼저 확인해요</h3>${report.checks.map(item=>`<div class="check"><b>✓</b><span>${item}</span></div>`).join('')}</div>`;
       }
 
-      function completeCurrentStage() {
-        if (currentStage !== unlockedStage || unlockedStage > 5) return;
-        const completedStop = routeStops.find(stop=>Number(stop.dataset.stage)===currentStage);
+      function openStage(stage) {
+        const report = reports[stage-1];
+        dialogContent.innerHTML=`<div class="dialog-main"><div class="micro">${report.tag}</div><h2 id="dialog-title">${report.title}</h2><p>${report.text}</p><div class="actions"><a class="primary" href="#report" data-dialog-action>${report.action} →</a></div></div><div class="dialog-checks"><div class="micro">Stage ${String(stage).padStart(2,'0')} checklist</div><h3>이 단계에서 확인할 세부 항목</h3>${report.checks.map(item=>`<div class="check"><b>✓</b><span>${item}</span></div>`).join('')}</div>`;
+        updateRouteStops(stage);
+        stageDialog.showModal();
+      }
+
+      function completeCurrentStage(stage) {
+        if (stage !== unlockedStage || unlockedStage > 5) return;
+        const completedStop = routeStops.find(stop=>Number(stop.dataset.stage)===stage);
         completedStop?.classList.add('cleared');
         completedStop?.classList.remove('active');
 
         if (unlockedStage === 5) {
           unlockedStage = 6;
           routeBoard.classList.add('route-finished');
-          renderStage(5);
+          updateRouteStops(5);
           journeySummary.hidden = false;
           window.setTimeout(()=>journeySummary.scrollIntoView({
             behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',
@@ -568,11 +565,10 @@
         }
 
         unlockedStage += 1;
-        currentStage = unlockedStage;
         routeBoard.style.setProperty('--route-height',`${440 + (unlockedStage-1)*320}px`);
         routeBoard.querySelector(`[data-route="${unlockedStage}"]`)?.classList.add('is-visible');
         routeBoard.querySelectorAll(`.map-item[data-stage="${unlockedStage}"]`).forEach(item=>item.classList.add('is-visible'));
-        renderStage(unlockedStage);
+        updateRouteStops(unlockedStage);
         const nextStop = routeStops.find(stop=>Number(stop.dataset.stage)===unlockedStage);
         window.setTimeout(()=>nextStop?.scrollIntoView({
           behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',
@@ -584,26 +580,24 @@
         stop.addEventListener('click',()=>{
           const stage=Number(stop.dataset.stage);
           if(stage>unlockedStage) return;
-          renderStage(stage);
           if(stage===unlockedStage && unlockedStage<=5) {
-            completeCurrentStage();
+            completeCurrentStage(stage);
           } else {
-            detail.scrollIntoView({behavior:'smooth',block:'nearest'});
+            openStage(stage);
           }
         });
       });
-      document.querySelectorAll('.summary-tab').forEach(tab=>{
-        tab.addEventListener('click',()=>{
-          const target = tab.dataset.summary;
-          document.querySelectorAll('.summary-tab').forEach(item=>{
-            const selected = item === tab;
-            item.classList.toggle('active',selected);
-            item.setAttribute('aria-selected',String(selected));
-          });
-          document.getElementById('summary-by-stage').hidden = target !== 'stage';
-          document.getElementById('summary-overall').hidden = target !== 'overall';
-        });
+      document.querySelectorAll('[data-open-stage]').forEach(button=>{
+        button.addEventListener('click',()=>openStage(Number(button.dataset.openStage)));
       });
+      stageDialog.addEventListener('click',event=>{
+        if(event.target===stageDialog) stageDialog.close();
+      });
+      dialogContent.addEventListener('click',event=>{
+        if(event.target.closest('[data-dialog-action]')) stageDialog.close();
+      });
+      stageDialog.addEventListener('close',()=>updateRouteStops(unlockedStage<=5?unlockedStage:5));
+      updateRouteStops();
       document.getElementById('report-form').addEventListener('submit',event=>{
         event.preventDefault(); document.getElementById('notice').style.display='block'; event.target.reset();
       });
