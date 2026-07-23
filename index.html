@@ -185,8 +185,15 @@
       }
       .route-stop small { display:block; color:var(--tomato); font:500 9px "DM Mono",monospace; }
       .route-stop strong { display:block; margin-top:4px; font-size:15px; letter-spacing:-.045em; }
-      .route-stop.active { background:var(--tomato); color:#fff; border-color:var(--tomato-deep); }
-      .route-stop.active small { color:#ffe4a8; }
+      .route-stop.active { outline:3px solid rgba(40,37,33,.2); outline-offset:3px; }
+      .route-stop.current {
+        background:var(--tomato); color:#fff; border-color:var(--tomato-deep);
+        animation:map-button-pulse 1.6s ease-in-out infinite;
+      }
+      .route-stop.current small { color:#ffe4a8; }
+      @keyframes map-button-pulse {
+        50% { box-shadow:6px 7px 0 rgba(40,37,33,.14),0 0 0 8px rgba(215,84,61,.14); }
+      }
       .route-stop.cleared::after {
         content:"✓"; position:absolute; right:-7px; top:-8px; display:grid; place-items:center;
         width:25px; height:25px; border-radius:50%; background:#4c8068; color:#fff; font-weight:800;
@@ -212,6 +219,7 @@
       .primary,.secondary { display:inline-block; padding:11px 14px; border-radius:10px; border:0; font-size:13px; font-weight:700; text-decoration:none; }
       .primary { background:var(--tomato); color:#fff; }.secondary{background:transparent;color:var(--ink);border:1px solid var(--line);}
       .primary:disabled { background:#b9afa4; cursor:default; }
+      .map-hint { align-self:center; color:var(--tomato-deep); font-size:12px; font-weight:700; }
       .report { margin:64px 0; padding:35px; display:grid; grid-template-columns:1.05fr .95fr; gap:42px; align-items:center; border-radius:24px; background:var(--ink); color:#fff; }
       .report h2 { margin:10px 0; font-size:29px; letter-spacing:-.055em; }.report p{margin:0;color:rgba(255,255,255,.68);font-size:14px;line-height:1.6;}
       .form { display:flex; gap:8px; }.form input{min-width:0;flex:1;padding:13px;border:1px solid rgba(255,255,255,.28);border-radius:10px;background:rgba(255,255,255,.09);color:#fff;}.form button{padding:13px 15px;border:0;border-radius:10px;background:var(--sun);font-weight:700;}
@@ -283,7 +291,7 @@
       </section>
 
       <section class="journey-map" id="journey">
-        <div class="journey-head"><div><div class="micro">Your sourcing map</div><h2>길을 열며 배우는 소싱 여정</h2></div><p>현재는 1단계 길만 열려 있어요. 각 단계를 완료하면 다음 과정과 세부 체크포인트가 지도처럼 이어집니다.</p></div>
+        <div class="journey-head"><div><div class="micro">Your sourcing map</div><h2>길을 열며 배우는 소싱 여정</h2></div><p>붉게 움직이는 지도 버튼을 누르면 다음 과정과 세부 체크포인트가 길처럼 이어집니다.</p></div>
         <div class="route-board" id="route-board" aria-label="단계별로 확장되는 소싱 지도">
           <svg class="route-svg" viewBox="0 0 1000 1720" preserveAspectRatio="none" aria-hidden="true">
             <g class="route-section is-visible" data-route="1">
@@ -312,7 +320,7 @@
           <div class="route-note map-item is-visible" data-stage="1" style="left:22%;top:70px"><b>CHECK 01</b>검색 추이와 계절성을 살펴봐요.</div>
           <div class="route-note map-item is-visible" data-stage="1" style="left:62%;top:150px"><b>CHECK 02</b>리뷰에서 반복되는 불편을 찾아요.</div>
           <div class="route-note map-item is-visible" data-stage="1" style="left:8%;top:250px"><b>CHECK 03</b>후보 상품을 세 개만 남겨요.</div>
-          <button class="route-stop map-item is-visible active" data-stage="1" style="left:42%;top:330px"><small>STAGE 01</small><strong>상품 찾기</strong></button>
+          <button class="route-stop map-item is-visible active current" data-stage="1" style="left:42%;top:330px"><small>STAGE 01 · OPEN</small><strong>상품 찾기</strong></button>
 
           <div class="route-note map-item" data-stage="2" style="left:55%;top:390px"><b>CHECK 01</b>검색 수요와 판매자 수를 비교해요.</div>
           <div class="route-note map-item" data-stage="2" style="left:8%;top:505px"><b>CHECK 02</b>배송비까지 넣어 총원가를 계산해요.</div>
@@ -335,7 +343,7 @@
           <button class="route-stop map-item" data-stage="5" style="left:88%;top:1640px"><small>STAGE 05</small><strong>입고·판매</strong></button>
         </div>
         <article class="detail" id="detail" aria-live="polite">
-          <div class="detail-main"><div class="micro">상품 탐색 리포트</div><h2>상품 찾기, 여기서부터 알아볼게요.</h2><p>관심이 모이는 상품을 찾는 데서 시작해요. 검색 추이, 가격대, 리뷰의 불만을 보고 후보를 천천히 좁혀볼 수 있습니다.</p><div class="actions"><button class="primary" id="complete-stage" data-stage="1">1단계 완료 · 다음 길 열기</button><a class="secondary" href="#report">후보 상품 살펴보기</a></div></div>
+          <div class="detail-main"><div class="micro">상품 탐색 리포트</div><h2>상품 찾기, 여기서부터 알아볼게요.</h2><p>관심이 모이는 상품을 찾는 데서 시작해요. 검색 추이, 가격대, 리뷰의 불만을 보고 후보를 천천히 좁혀볼 수 있습니다.</p><div class="actions"><span class="map-hint">↑ 지도 위 ‘상품 찾기’ 버튼을 누르면 다음 길이 열려요.</span><a class="secondary" href="#report">후보 상품 살펴보기</a></div></div>
           <div class="detail-side"><div class="micro">Before you move on</div><h3>이것만 먼저 확인해요</h3><div class="check"><b>✓</b><span>가격대와 판매자 수를 비교해요</span></div><div class="check"><b>✓</b><span>반복되는 리뷰 불만을 찾아요</span></div><div class="check"><b>✓</b><span>후보 상품을 세 개 남겨요</span></div></div>
         </article>
       </section>
@@ -460,15 +468,20 @@
 
       function renderStage(stage) {
         currentStage = stage;
-        routeStops.forEach(stop=>stop.classList.toggle('active',Number(stop.dataset.stage)===stage));
+        routeStops.forEach(stop=>{
+          const stopStage = Number(stop.dataset.stage);
+          stop.classList.toggle('active',stopStage===stage);
+          stop.classList.toggle('current',stopStage===unlockedStage && unlockedStage<=5);
+          stop.querySelector('small').textContent = `STAGE ${String(stopStage).padStart(2,'0')}${stopStage===unlockedStage && unlockedStage<=5?' · OPEN':''}`;
+        });
         const report = reports[stage-1];
         const isCurrent = stage === unlockedStage;
-        const isFinished = unlockedStage === 6;
-        const completeLabel = stage === 5 ? '전체 소싱 여정 완성' : `${stage}단계 완료 · 다음 길 열기`;
-        const completeButton = isFinished || stage < unlockedStage
-          ? '<button class="primary" disabled>완료한 단계예요</button>'
-          : `<button class="primary" id="complete-stage" data-stage="${stage}">${completeLabel}</button>`;
-        detail.innerHTML=`<div class="detail-main"><div class="micro">${report.tag}</div><h2>${report.title}</h2><p>${report.text}</p><div class="actions">${isCurrent ? completeButton : '<button class="primary" disabled>완료한 단계예요</button>'}<a class="secondary" href="#report">${report.action}</a></div></div><div class="detail-side"><div class="micro">Before you move on</div><h3>이것만 먼저 확인해요</h3>${report.checks.map(item=>`<div class="check"><b>✓</b><span>${item}</span></div>`).join('')}</div>`;
+        const hint = unlockedStage === 6
+          ? '다섯 단계의 길을 모두 열었어요.'
+          : isCurrent
+            ? `↑ 지도 위 ‘${stepNames[stage]}’ 버튼을 누르면 ${stage===5?'전체 지도가 완성돼요.':'다음 길이 열려요.'}`
+            : '완료한 단계예요. 지도에서 붉게 움직이는 버튼을 찾아보세요.';
+        detail.innerHTML=`<div class="detail-main"><div class="micro">${report.tag}</div><h2>${report.title}</h2><p>${report.text}</p><div class="actions"><span class="map-hint">${hint}</span><a class="secondary" href="#report">${report.action}</a></div></div><div class="detail-side"><div class="micro">Before you move on</div><h3>이것만 먼저 확인해요</h3>${report.checks.map(item=>`<div class="check"><b>✓</b><span>${item}</span></div>`).join('')}</div>`;
       }
 
       function completeCurrentStage() {
@@ -502,11 +515,12 @@
           const stage=Number(stop.dataset.stage);
           if(stage>unlockedStage) return;
           renderStage(stage);
-          detail.scrollIntoView({behavior:'smooth',block:'nearest'});
+          if(stage===unlockedStage && unlockedStage<=5) {
+            completeCurrentStage();
+          } else {
+            detail.scrollIntoView({behavior:'smooth',block:'nearest'});
+          }
         });
-      });
-      detail.addEventListener('click',event=>{
-        if(event.target.closest('#complete-stage')) completeCurrentStage();
       });
       document.getElementById('report-form').addEventListener('submit',event=>{
         event.preventDefault(); document.getElementById('notice').style.display='block'; event.target.reset();
