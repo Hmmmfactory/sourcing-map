@@ -38,22 +38,21 @@
       .puzzle-copy { display:flex; align-items:end; justify-content:space-between; gap:24px; margin:8px 0 23px; }
       .puzzle-copy h2 { margin:6px 0 0; font-size:clamp(26px,3vw,39px); letter-spacing:-.07em; }
       .puzzle-copy p { margin:0; max-width:310px; color:var(--muted); font-size:14px; line-height:1.55; }
+      .puzzle-status { display:flex; align-items:center; justify-content:space-between; margin:0 0 11px; color:var(--muted); font-family:"DM Mono", monospace; font-size:11px; letter-spacing:.06em; }
+      .progress-dots { display:flex; gap:5px; }.progress-dots i { width:8px; height:8px; border:1px solid var(--tomato); border-radius:50%; }.progress-dots i.filled { background:var(--tomato); box-shadow:0 0 0 3px rgba(215,84,61,.12); }
       .puzzle-board-wrap { overflow-x:auto; padding:6px 0 13px; }
       .puzzle-board { min-width:760px; display:grid; grid-template-columns:repeat(5,1fr); padding:12px 14px; border:1px solid var(--ink); border-radius:20px; background:var(--ink); }
-      .puzzle-slot { min-height:104px; display:flex; align-items:center; justify-content:center; position:relative; border:1px dashed rgba(255,255,255,.32); margin-left:-1px; color:rgba(255,255,255,.45); font-family:"DM Mono", monospace; font-size:11px; letter-spacing:.08em; }
+      .puzzle-slot { min-height:104px; display:flex; align-items:center; justify-content:center; position:relative; overflow:visible; border:1px dashed rgba(255,255,255,.32); margin-left:-1px; color:rgba(255,255,255,.45); font-family:"DM Mono", monospace; font-size:11px; letter-spacing:.08em; }
       .puzzle-slot:first-child { border-radius:10px 0 0 10px; }.puzzle-slot:last-child { border-radius:0 10px 10px 0; }
       .puzzle-slot.current-slot { border-color:var(--sun); color:var(--sun); }
-      .puzzle-piece { width:100%; height:100%; min-height:102px; border:0; color:var(--ink); font-weight:700; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:5px; padding:12px; transition:transform .18s, filter .18s; user-select:none; }
+      .puzzle-piece { width:100%; height:100%; min-height:102px; border:0; background:transparent; color:var(--ink); font-weight:700; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:5px; padding:12px; position:relative; overflow:visible; transition:transform .18s, filter .18s; user-select:none; }
+      .piece-shape { position:absolute; z-index:0; left:0; top:0; width:120%; height:100%; overflow:visible; pointer-events:none; }.piece-shape path { stroke:rgba(40,37,33,.16); stroke-width:1.4; vector-effect:non-scaling-stroke; }
+      .puzzle-piece > span { position:relative; z-index:1; }.piece-1 .piece-shape path { fill:#e9c573; }.piece-2 .piece-shape path { fill:#e2a890; }.piece-3 .piece-shape path { fill:#f3e1b2; }.piece-4 .piece-shape path { fill:#c96b51; }.piece-5 .piece-shape path { fill:#a9bbb2; }
       .puzzle-piece:hover, .puzzle-piece.selected { transform:translateY(-5px) rotate(-1deg); filter:brightness(1.04); }
       .puzzle-piece:focus-visible { outline:3px solid var(--sun); outline-offset:3px; }
       .puzzle-piece .piece-no { font-family:"DM Mono", monospace; font-size:11px; letter-spacing:.08em; opacity:.7; }.puzzle-piece .piece-name { font-size:17px; letter-spacing:-.055em; }
-      .piece-1 { background:#e9c573; clip-path:polygon(0 0,86% 0,86% 16%,100% 16%,100% 41%,86% 41%,86% 58%,100% 58%,100% 84%,86% 84%,86% 100%,0 100%); }
-      .piece-2 { background:#e2a890; clip-path:polygon(0 0,14% 0,14% 16%,100% 16%,100% 100%,14% 100%,14% 84%,0 84%); }
-      .piece-3 { background:#f3e1b2; clip-path:polygon(0 16%,14% 16%,14% 0,86% 0,86% 16%,100% 16%,100% 84%,86% 84%,86% 100%,14% 100%,14% 84%,0 84%); }
-      .piece-4 { background:#c96b51; color:#fff9ef; clip-path:polygon(0 16%,14% 16%,14% 0,100% 0,100% 84%,14% 84%,14% 100%,0 100%); }
-      .piece-5 { background:#a9bbb2; clip-path:polygon(0 0,86% 0,86% 16%,100% 16%,100% 100%,0 100%,0 84%,14% 84%,14% 16%,0 16%); }
-      .puzzle-tray { display:flex; justify-content:space-between; gap:12px; padding:0 4px; }
-      .puzzle-tray .puzzle-piece { width:calc(20% - 10px); min-height:93px; border:1px solid rgba(40,37,33,.14); box-shadow:0 10px 20px rgba(76,58,41,.09); }
+      .piece-4 { color:#fff9ef; }.puzzle-tray { display:flex; justify-content:space-between; gap:12px; padding:0 4px; }
+      .puzzle-tray .puzzle-piece { width:calc(20% - 10px); min-height:93px; box-shadow:0 10px 20px rgba(76,58,41,.09); }
       .puzzle-note { min-height:21px; margin:15px 0 0; font-size:13px; color:var(--muted); }.puzzle-note b { color:var(--tomato); }
       .puzzle-note.complete { color:var(--tomato-deep); font-weight:600; }
       .puzzle-piece.wrong { animation:shake .32s ease-in-out; }
@@ -64,6 +63,8 @@
       .journey-done .puzzle-tray { display:none; }
       .journey-done .puzzle-board { background:var(--paper-2); border-color:var(--line); }
       .journey-done .puzzle-slot { border:0; color:var(--ink); }.journey-done .puzzle-slot .puzzle-piece { min-height:102px; }
+      .puzzle-board.complete { animation:complete-pulse .65s ease-out; box-shadow:0 0 0 8px rgba(215,84,61,.1); }.puzzle-board.complete::after { content:"✓ FLOW COMPLETE"; position:absolute; right:25px; top:-11px; padding:5px 9px; border-radius:999px; background:var(--tomato); color:#fff; font:10px "DM Mono",monospace; letter-spacing:.08em; }.puzzle-board { position:relative; }
+      @keyframes complete-pulse { 50%{transform:scale(1.012)} }
       .journey-done .stage { animation:reveal .45s both; }.journey-done .stage:nth-child(1){animation-delay:.05s}.journey-done .stage:nth-child(2){animation-delay:.13s}.journey-done .stage:nth-child(3){animation-delay:.21s}.journey-done .stage:nth-child(4){animation-delay:.29s}.journey-done .stage:nth-child(5){animation-delay:.37s}
       @keyframes reveal { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:translateY(0)} }
       .journey-head { display:flex; align-items:baseline; justify-content:space-between; margin-bottom:24px; }
@@ -137,12 +138,13 @@
           <div class="puzzle-board-wrap"><div class="puzzle-board" id="puzzle-board" aria-label="소싱 여정 퍼즐판">
             <div class="puzzle-slot current-slot" data-slot="1">01</div><div class="puzzle-slot" data-slot="2">02</div><div class="puzzle-slot" data-slot="3">03</div><div class="puzzle-slot" data-slot="4">04</div><div class="puzzle-slot" data-slot="5">05</div>
           </div></div>
+          <div class="puzzle-status"><span id="puzzle-count">0 / 5 조각 연결</span><span class="progress-dots" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span></div>
           <div class="puzzle-tray" id="puzzle-tray" aria-label="소싱 여정 퍼즐 조각">
-            <button class="puzzle-piece piece-3" data-piece="3" draggable="true"><span class="piece-no">03</span><span class="piece-name">소싱·배송</span></button>
-            <button class="puzzle-piece piece-1" data-piece="1" draggable="true"><span class="piece-no">01</span><span class="piece-name">상품 찾기</span></button>
-            <button class="puzzle-piece piece-5" data-piece="5" draggable="true"><span class="piece-no">05</span><span class="piece-name">입고·판매</span></button>
-            <button class="puzzle-piece piece-2" data-piece="2" draggable="true"><span class="piece-no">02</span><span class="piece-name">상품성 검증</span></button>
-            <button class="puzzle-piece piece-4" data-piece="4" draggable="true"><span class="piece-no">04</span><span class="piece-name">수입 준비</span></button>
+            <button class="puzzle-piece piece-3" data-piece="3" draggable="true"><svg class="piece-shape" viewBox="0 0 240 120" preserveAspectRatio="none" aria-hidden="true"><path d="M0 32H40V0H200V32H240V76H200V120H40V76H0Z" /></svg><span class="piece-no">03</span><span class="piece-name">소싱·배송</span></button>
+            <button class="puzzle-piece piece-1" data-piece="1" draggable="true"><svg class="piece-shape" viewBox="0 0 240 120" preserveAspectRatio="none" aria-hidden="true"><path d="M0 0H200V32H240V76H200V120H0Z" /></svg><span class="piece-no">01</span><span class="piece-name">상품 찾기</span></button>
+            <button class="puzzle-piece piece-5" data-piece="5" draggable="true"><svg class="piece-shape" viewBox="0 0 240 120" preserveAspectRatio="none" aria-hidden="true"><path d="M0 32H40V0H200V120H40V76H0Z" /></svg><span class="piece-no">05</span><span class="piece-name">입고·판매</span></button>
+            <button class="puzzle-piece piece-2" data-piece="2" draggable="true"><svg class="piece-shape" viewBox="0 0 240 120" preserveAspectRatio="none" aria-hidden="true"><path d="M0 32H40V0H200V32H160V76H200V120H40V76H0Z" /></svg><span class="piece-no">02</span><span class="piece-name">상품성 검증</span></button>
+            <button class="puzzle-piece piece-4" data-piece="4" draggable="true"><svg class="piece-shape" viewBox="0 0 240 120" preserveAspectRatio="none" aria-hidden="true"><path d="M0 32H40V0H200V32H160V76H200V120H40V76H0Z" /></svg><span class="piece-no">04</span><span class="piece-name">수입 준비</span></button>
           </div>
           <p class="puzzle-note" id="puzzle-note">첫 조각은 <b>상품 찾기</b>예요. 조각을 선택해 퍼즐판에 놓아보세요.</p>
         </div>
@@ -192,6 +194,8 @@
       const puzzleNames = ['','상품 찾기','상품성 검증','소싱·배송','수입 준비','입고·판매'];
       const puzzleBoard = document.getElementById('puzzle-board');
       const puzzleNote = document.getElementById('puzzle-note');
+      const puzzleCount = document.getElementById('puzzle-count');
+      const puzzleDots = document.querySelectorAll('.progress-dots i');
       let selectedPiece = null;
       let nextPiece = 1;
       document.body.classList.add('puzzle-active');
@@ -199,6 +203,10 @@
       function updatePuzzleNote(message, complete=false) {
         puzzleNote.innerHTML = message;
         puzzleNote.classList.toggle('complete', complete);
+      }
+      function updatePuzzleProgress(count) {
+        puzzleCount.textContent = `${count} / 5 조각 연결`;
+        puzzleDots.forEach((dot, index) => dot.classList.toggle('filled', index < count));
       }
       function selectPuzzlePiece(piece) {
         document.querySelectorAll('.puzzle-piece').forEach(item => item.classList.remove('selected'));
@@ -219,13 +227,16 @@
         slot.classList.remove('current-slot');
         slot.appendChild(piece);
         piece.classList.remove('selected');
+        piece.classList.add('locked');
         piece.draggable = false;
         selectedPiece = null;
         nextPiece += 1;
+        updatePuzzleProgress(nextPiece - 1);
         const followingSlot = puzzleBoard.querySelector(`[data-slot="${nextPiece}"]`);
         if (followingSlot) followingSlot.classList.add('current-slot');
         if (nextPiece === 6) {
           updatePuzzleNote(`<b>소싱의 흐름이 완성됐어요.</b> 이제 각 단계에서 필요한 리포트를 차례로 살펴볼 수 있어요.`, true);
+          puzzleBoard.classList.add('complete');
           document.body.classList.remove('puzzle-active');
           document.body.classList.add('journey-done');
           return;
