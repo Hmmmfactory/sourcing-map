@@ -19,26 +19,18 @@
       body {
         margin:0; color:var(--ink); background:var(--scene-bg);
         font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans KR",sans-serif;
-        letter-spacing:-.025em; transition:background-color .75s cubic-bezier(.2,.8,.2,1);
+        letter-spacing:-.025em;
       }
       body::before {
         content:""; position:fixed; inset:0; z-index:-1; pointer-events:none;
         background:radial-gradient(circle at 78% 24%,var(--scene-glow),transparent 43%);
         transition:background .75s ease;
       }
-      body.progress-1 { --scene-bg:#f0dfcf; --scene-glow:rgba(230,168,112,.34); }
-      body.progress-2 { --scene-bg:#efcfb9; --scene-glow:rgba(218,111,75,.31); }
-      body.progress-3 { --scene-bg:#edb9a1; --scene-glow:rgba(215,84,61,.34); }
-      body.progress-4 { --scene-bg:#e99a7d; --scene-glow:rgba(255,239,182,.31); }
-      body.progress-5 { --scene-bg:#df785d; --scene-glow:rgba(255,244,201,.43); }
-      body.progress-4,body.progress-5 { --muted:#5d4038; }
-      body.progress-5 .game-copy h1 em,
-      body.progress-5 .game-copy .eyebrow { color:#fff2dc; text-shadow:0 1px 0 rgba(91,38,27,.12); }
-      body.reward-flash::after {
-        content:""; position:fixed; inset:0; z-index:30; pointer-events:none;
-        background:rgba(255,244,201,.58); animation:reward-flash .55s ease-out both;
+      body.reward-flash .game-panel { animation:reward-pulse .55s ease-out both; }
+      @keyframes reward-pulse {
+        0% { box-shadow:0 0 0 0 rgba(215,84,61,.32),0 24px 70px rgba(65,44,27,.13); }
+        55% { box-shadow:0 0 0 10px rgba(215,84,61,.1),0 28px 76px rgba(65,44,27,.17); }
       }
-      @keyframes reward-flash { from{opacity:1} to{opacity:0} }
       button,input { font:inherit; } button { cursor:pointer; }
       button:focus-visible,a:focus-visible,input:focus-visible { outline:3px solid var(--sun); outline-offset:3px; }
       .shell { width:min(1180px,calc(100% - 56px)); margin:0 auto; }
@@ -184,7 +176,7 @@
       @media (prefers-reduced-motion:reduce) { *,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;transition-duration:.01ms!important;} }
     </style>
   </head>
-  <body class="progress-0 game-running">
+  <body class="game-running">
     <main class="shell">
       <header>
         <div class="brand">sourcing<i>:</i> map</div>
@@ -196,7 +188,7 @@
           <div class="eyebrow">30-second sourcing game</div>
           <h1>피자 한 판으로<br /><em>소싱을 시작해요.</em></h1>
           <p>다섯 조각은 상품 탐색부터 판매까지의 여정입니다. 조각의 방향은 이미 정해져 있어요. 알맞은 자리를 찾아 한 조각씩 피자를 완성해보세요.</p>
-          <div class="rule-card"><strong>게임 방법</strong><span>조각을 선택한 뒤 피자의 빈자리를 누르세요. 맞을 때마다 사이트 전체의 색이 변하고, 다섯 조각을 완성하면 소싱 리포트가 열립니다.</span></div>
+          <div class="rule-card"><strong>게임 방법</strong><span>조각을 선택한 뒤 피자의 빈자리를 누르세요. 맞을 때마다 피자가 채워지고 진행률이 오르며, 다섯 조각을 완성하면 소싱 리포트가 열립니다.</span></div>
         </div>
 
         <div class="game-panel">
@@ -286,14 +278,12 @@
         message.innerHTML = `<b>${number}번 ${stepNames[number]}</b> 조각을 골랐어요. 같은 방향의 빈자리를 찾아보세요.`;
       }
 
-      function pulseScene() {
+      function pulseGame() {
         document.body.classList.add('reward-flash');
         window.setTimeout(() => document.body.classList.remove('reward-flash'), 580);
       }
 
       function updateScene() {
-        for (let i=0; i<=5; i+=1) document.body.classList.remove(`progress-${i}`);
-        document.body.classList.add(`progress-${completed}`);
         count.textContent = `${completed} / 5 SLICES`;
         progressFill.style.width = `${completed * 20}%`;
         dots.forEach((dot,index) => dot.classList.toggle('on',index < completed));
@@ -320,7 +310,7 @@
         selectedPiece = null;
         completed += 1;
         updateScene();
-        pulseScene();
+        pulseGame();
         if (completed === 5) {
           pizzaBoard.classList.add('complete');
           pizzaWrap.classList.add('won');
@@ -329,7 +319,7 @@
           message.innerHTML = '<b>피자와 소싱 지도가 완성됐어요!</b> 아래에서 각 단계의 리포트를 열어보세요.';
           return;
         }
-        message.innerHTML = `<b>정답이에요.</b> 배경이 한 단계 변했어요. 이제 ${5-completed}조각 남았습니다.`;
+        message.innerHTML = `<b>정답이에요.</b> 피자가 한 조각 채워졌어요. 이제 ${5-completed}조각 남았습니다.`;
       }
 
       pieces.forEach(piece => {
