@@ -142,19 +142,65 @@
       .journey-head { display:flex; justify-content:space-between; align-items:end; gap:24px; border-top:1px solid var(--ink); padding-top:21px; margin-bottom:23px; }
       .journey-head h2 { margin:0; font-size:31px; letter-spacing:-.06em; }
       .journey-head p { margin:0; max-width:350px; color:var(--muted); font-size:13px; line-height:1.55; }
-      .rail { display:grid; grid-template-columns:repeat(5,1fr); overflow:hidden; border:1px solid var(--line); border-radius:22px; background:rgba(255,253,249,.55); }
-      .stage { min-height:205px; padding:22px 18px; position:relative; border:0; border-right:1px solid var(--line); background:transparent; text-align:left; color:var(--ink); transition:.2s; }
-      .stage:last-child { border-right:0; }
-      .stage:hover,.stage.active { background:var(--tomato); color:#fff; }
-      .stage-no { font:500 10px "DM Mono",monospace; color:var(--tomato); }
-      .stage:hover .stage-no,.stage.active .stage-no { color:var(--sun); }
-      .stage h3 { margin:48px 0 8px; font-size:18px; letter-spacing:-.05em; }
-      .stage p { margin:0; color:var(--muted); font-size:12px; line-height:1.5; }
-      .stage:hover p,.stage.active p { color:rgba(255,255,255,.72); }
-      .stage-arrow { position:absolute; right:18px; bottom:17px; }
-      .journey-unlocked .stage { animation:stage-in .48s both; }
-      .journey-unlocked .stage:nth-child(2){animation-delay:.09s}.journey-unlocked .stage:nth-child(3){animation-delay:.18s}.journey-unlocked .stage:nth-child(4){animation-delay:.27s}.journey-unlocked .stage:nth-child(5){animation-delay:.36s}
-      @keyframes stage-in { from{opacity:0;transform:translateY(18px)} to{opacity:1;transform:none} }
+      .route-board {
+        --route-height:440px; position:relative; height:var(--route-height); overflow:hidden;
+        border:1px solid var(--line); border-radius:28px; background:#f5e5cf;
+        box-shadow:inset 0 0 80px rgba(164,105,67,.08); transition:height .9s cubic-bezier(.2,.8,.2,1);
+      }
+      .route-board::before {
+        content:""; position:absolute; inset:0; opacity:.44; pointer-events:none;
+        background:
+          radial-gradient(circle at 18% 12%,rgba(255,255,255,.76) 0 2px,transparent 3px),
+          radial-gradient(circle at 76% 7%,rgba(255,255,255,.62) 0 1.5px,transparent 2.5px),
+          linear-gradient(112deg,transparent 48%,rgba(255,255,255,.32) 49% 50%,transparent 51%);
+        background-size:51px 57px,73px 67px,250px 230px;
+      }
+      .route-svg { position:absolute; inset:0 0 auto; width:100%; height:1720px; overflow:visible; }
+      .route-section { opacity:0; }
+      .route-section.is-visible { opacity:1; }
+      .route-road,.route-dash {
+        fill:none; stroke-linecap:round; stroke-linejoin:round; pathLength:1;
+        stroke-dasharray:1; stroke-dashoffset:1;
+      }
+      .route-road { stroke:#fffaf1; stroke-width:48; filter:drop-shadow(0 8px 4px rgba(92,55,31,.12)); }
+      .route-dash { stroke:#d15b40; stroke-width:3; stroke-dasharray:.018 .024; }
+      .route-section.is-visible .route-road { animation:draw-road .9s cubic-bezier(.2,.8,.2,1) forwards; }
+      .route-section.is-visible .route-dash { animation:draw-road 1.05s .08s cubic-bezier(.2,.8,.2,1) forwards; }
+      @keyframes draw-road { to { stroke-dashoffset:0; } }
+      .map-item {
+        position:absolute; z-index:2; opacity:0; pointer-events:none;
+        transform:translateY(12px) scale(.96); transition:opacity .38s .48s,transform .48s .48s;
+      }
+      .map-item.is-visible { opacity:1; pointer-events:auto; transform:none; }
+      .route-note {
+        width:min(210px,25vw); padding:11px 13px; border:1px solid rgba(40,37,33,.16);
+        border-radius:12px 12px 12px 3px; background:rgba(255,253,249,.9);
+        box-shadow:0 8px 24px rgba(88,57,33,.08); font-size:12px; line-height:1.4;
+      }
+      .route-note b { display:block; margin-bottom:3px; color:var(--tomato); font:500 9px "DM Mono",monospace; letter-spacing:.06em; }
+      .route-stop {
+        width:138px; min-height:74px; padding:12px 14px; border:2px solid var(--ink);
+        border-radius:50% 46% 48% 44%; background:var(--white); color:var(--ink);
+        text-align:left; box-shadow:6px 7px 0 rgba(40,37,33,.14); transform:translate(-50%,-50%);
+      }
+      .route-stop small { display:block; color:var(--tomato); font:500 9px "DM Mono",monospace; }
+      .route-stop strong { display:block; margin-top:4px; font-size:15px; letter-spacing:-.045em; }
+      .route-stop.active { background:var(--tomato); color:#fff; border-color:var(--tomato-deep); }
+      .route-stop.active small { color:#ffe4a8; }
+      .route-stop.cleared::after {
+        content:"✓"; position:absolute; right:-7px; top:-8px; display:grid; place-items:center;
+        width:25px; height:25px; border-radius:50%; background:#4c8068; color:#fff; font-weight:800;
+      }
+      .route-start {
+        left:6%; top:35px; padding:8px 12px; border-radius:999px; background:var(--ink); color:#fff;
+        font:500 10px "DM Mono",monospace; letter-spacing:.08em;
+      }
+      .route-finished .route-stop:last-of-type { background:#4c8068; color:#fff; border-color:#315c49; }
+      .route-finished::after {
+        content:"MAP COMPLETE"; position:absolute; z-index:4; right:5%; bottom:24px;
+        padding:9px 13px; border:2px solid var(--tomato); color:var(--tomato);
+        font:500 11px "DM Mono",monospace; letter-spacing:.08em; transform:rotate(-3deg);
+      }
       .detail { margin-top:14px; display:grid; grid-template-columns:1.2fr 1fr; min-height:226px; overflow:hidden; border:1px solid var(--line); border-radius:22px; background:var(--white); }
       .detail-main,.detail-side { padding:30px 32px; }
       .detail-main h2 { margin:10px 0; font-size:25px; letter-spacing:-.055em; }
@@ -165,6 +211,7 @@
       .actions { display:flex; gap:8px; margin-top:20px; }
       .primary,.secondary { display:inline-block; padding:11px 14px; border-radius:10px; border:0; font-size:13px; font-weight:700; text-decoration:none; }
       .primary { background:var(--tomato); color:#fff; }.secondary{background:transparent;color:var(--ink);border:1px solid var(--line);}
+      .primary:disabled { background:#b9afa4; cursor:default; }
       .report { margin:64px 0; padding:35px; display:grid; grid-template-columns:1.05fr .95fr; gap:42px; align-items:center; border-radius:24px; background:var(--ink); color:#fff; }
       .report h2 { margin:10px 0; font-size:29px; letter-spacing:-.055em; }.report p{margin:0;color:rgba(255,255,255,.68);font-size:14px;line-height:1.6;}
       .form { display:flex; gap:8px; }.form input{min-width:0;flex:1;padding:13px;border:1px solid rgba(255,255,255,.28);border-radius:10px;background:rgba(255,255,255,.09);color:#fff;}.form button{padding:13px 15px;border:0;border-radius:10px;background:var(--sun);font-weight:700;}
@@ -173,10 +220,10 @@
       footer{display:flex;justify-content:space-between;padding:23px 0 32px;color:var(--muted);font-size:11px}
 
       @media (max-width:900px) {
-        .game-hero{grid-template-columns:1fr;gap:30px;padding-top:44px}.game-copy h1{max-width:650px}.game-copy>p{max-width:600px}.game-area{grid-template-columns:1fr}.pizza-board{max-width:430px}.piece-tray{grid-template-columns:repeat(5,1fr)}.pizza-piece{display:block;text-align:center;padding:7px}.piece-icon{width:50px}.piece-meta b{font-size:11px}.rail{grid-template-columns:1fr 1fr}.stage{border-bottom:1px solid var(--line)}.detail,.report{grid-template-columns:1fr}.detail-side{border-left:0;border-top:1px solid var(--line)}
+        .game-hero{grid-template-columns:1fr;gap:30px;padding-top:44px}.game-copy h1{max-width:650px}.game-copy>p{max-width:600px}.game-area{grid-template-columns:1fr}.pizza-board{max-width:430px}.piece-tray{grid-template-columns:repeat(5,1fr)}.pizza-piece{display:block;text-align:center;padding:7px}.piece-icon{width:50px}.piece-meta b{font-size:11px}.route-note{width:180px}.detail,.report{grid-template-columns:1fr}.detail-side{border-left:0;border-top:1px solid var(--line)}
       }
       @media (max-width:620px) {
-        .shell{width:min(100% - 32px,1180px)}header{height:64px}nav a:not(.nav-pill){display:none}.game-hero{min-height:auto;padding:38px 0 50px}.game-copy h1{font-size:42px}.game-panel{padding:16px;border-radius:22px}.piece-tray{grid-template-columns:repeat(3,1fr)}.pizza-piece:nth-child(4),.pizza-piece:nth-child(5){grid-column:auto}.journey-head{display:block}.journey-head p{margin-top:9px}.rail{grid-template-columns:1fr}.stage{min-height:145px;border-right:0}.stage h3{margin-top:26px}.detail-main,.detail-side,.report{padding:24px}.form{display:grid}footer{display:grid;gap:7px}
+        .shell{width:min(100% - 32px,1180px)}header{height:64px}nav a:not(.nav-pill){display:none}.game-hero{min-height:auto;padding:38px 0 50px}.game-copy h1{font-size:42px}.game-panel{padding:16px;border-radius:22px}.piece-tray{grid-template-columns:repeat(3,1fr)}.pizza-piece:nth-child(4),.pizza-piece:nth-child(5){grid-column:auto}.journey-head{display:block}.journey-head p{margin-top:9px}.route-board{border-radius:20px}.route-note{width:145px;padding:9px;font-size:11px}.route-stop{width:112px;min-height:66px}.route-stop strong{font-size:13px}.detail-main,.detail-side,.report{padding:24px}.actions{flex-wrap:wrap}.form{display:grid}footer{display:grid;gap:7px}
       }
       @media (prefers-reduced-motion:reduce) { *,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;transition-duration:.01ms!important;} }
     </style>
@@ -236,16 +283,59 @@
       </section>
 
       <section class="journey-map" id="journey">
-        <div class="journey-head"><div><div class="micro">Your sourcing map</div><h2>완성된 소싱 여정</h2></div><p>게임에서 맞춘 다섯 조각이 실제 소싱의 다섯 단계입니다. 지금 필요한 단계부터 가볍게 열어보세요.</p></div>
-        <div class="rail" id="rail">
-          <button class="stage active" data-index="0"><span class="stage-no">01</span><h3>상품 찾기</h3><p>트렌드와 고객 불만에서 후보를 찾습니다.</p><span class="stage-arrow">↗</span></button>
-          <button class="stage" data-index="1"><span class="stage-no">02</span><h3>상품성 검증</h3><p>수요·경쟁·총원가를 확인합니다.</p><span class="stage-arrow">↗</span></button>
-          <button class="stage" data-index="2"><span class="stage-no">03</span><h3>소싱·배송</h3><p>공급처와 배대지·포워딩을 비교합니다.</p><span class="stage-arrow">↗</span></button>
-          <button class="stage" data-index="3"><span class="stage-no">04</span><h3>수입 준비</h3><p>관세·인증·통관 서류를 점검합니다.</p><span class="stage-arrow">↗</span></button>
-          <button class="stage" data-index="4"><span class="stage-no">05</span><h3>입고·판매</h3><p>보관·출고·가격과 재주문을 관리합니다.</p><span class="stage-arrow">↗</span></button>
+        <div class="journey-head"><div><div class="micro">Your sourcing map</div><h2>길을 열며 배우는 소싱 여정</h2></div><p>현재는 1단계 길만 열려 있어요. 각 단계를 완료하면 다음 과정과 세부 체크포인트가 지도처럼 이어집니다.</p></div>
+        <div class="route-board" id="route-board" aria-label="단계별로 확장되는 소싱 지도">
+          <svg class="route-svg" viewBox="0 0 1000 1720" preserveAspectRatio="none" aria-hidden="true">
+            <g class="route-section is-visible" data-route="1">
+              <path class="route-road" pathLength="1" d="M70 55 C360 20 520 145 250 185 C15 220 85 350 420 330"/>
+              <path class="route-dash" pathLength="1" d="M70 55 C360 20 520 145 250 185 C15 220 85 350 420 330"/>
+            </g>
+            <g class="route-section" data-route="2">
+              <path class="route-road" pathLength="1" d="M420 330 C780 300 950 430 720 520 C500 610 530 725 860 680"/>
+              <path class="route-dash" pathLength="1" d="M420 330 C780 300 950 430 720 520 C500 610 530 725 860 680"/>
+            </g>
+            <g class="route-section" data-route="3">
+              <path class="route-road" pathLength="1" d="M860 680 C1030 655 980 860 690 870 C410 880 300 1005 560 1030"/>
+              <path class="route-dash" pathLength="1" d="M860 680 C1030 655 980 860 690 870 C410 880 300 1005 560 1030"/>
+            </g>
+            <g class="route-section" data-route="4">
+              <path class="route-road" pathLength="1" d="M560 1030 C870 1060 900 1210 610 1230 C330 1250 220 1380 470 1400"/>
+              <path class="route-dash" pathLength="1" d="M560 1030 C870 1060 900 1210 610 1230 C330 1250 220 1380 470 1400"/>
+            </g>
+            <g class="route-section" data-route="5">
+              <path class="route-road" pathLength="1" d="M470 1400 C700 1410 815 1515 880 1640"/>
+              <path class="route-dash" pathLength="1" d="M470 1400 C700 1410 815 1515 880 1640"/>
+            </g>
+          </svg>
+
+          <span class="route-start map-item is-visible">START · 첫 상품</span>
+          <div class="route-note map-item is-visible" data-stage="1" style="left:22%;top:70px"><b>CHECK 01</b>검색 추이와 계절성을 살펴봐요.</div>
+          <div class="route-note map-item is-visible" data-stage="1" style="left:62%;top:150px"><b>CHECK 02</b>리뷰에서 반복되는 불편을 찾아요.</div>
+          <div class="route-note map-item is-visible" data-stage="1" style="left:8%;top:250px"><b>CHECK 03</b>후보 상품을 세 개만 남겨요.</div>
+          <button class="route-stop map-item is-visible active" data-stage="1" style="left:42%;top:330px"><small>STAGE 01</small><strong>상품 찾기</strong></button>
+
+          <div class="route-note map-item" data-stage="2" style="left:55%;top:390px"><b>CHECK 01</b>검색 수요와 판매자 수를 비교해요.</div>
+          <div class="route-note map-item" data-stage="2" style="left:8%;top:505px"><b>CHECK 02</b>배송비까지 넣어 총원가를 계산해요.</div>
+          <div class="route-note map-item" data-stage="2" style="left:58%;top:590px"><b>CHECK 03</b>GO·WAIT 판단 근거를 기록해요.</div>
+          <button class="route-stop map-item" data-stage="2" style="left:86%;top:680px"><small>STAGE 02</small><strong>상품성 검증</strong></button>
+
+          <div class="route-note map-item" data-stage="3" style="left:62%;top:735px"><b>CHECK 01</b>공급처 조건과 최소수량을 물어봐요.</div>
+          <div class="route-note map-item" data-stage="3" style="left:10%;top:845px"><b>CHECK 02</b>샘플로 품질과 포장을 확인해요.</div>
+          <div class="route-note map-item" data-stage="3" style="left:61%;top:935px"><b>CHECK 03</b>배대지와 포워딩 견적을 비교해요.</div>
+          <button class="route-stop map-item" data-stage="3" style="left:56%;top:1030px"><small>STAGE 03</small><strong>소싱·배송</strong></button>
+
+          <div class="route-note map-item" data-stage="4" style="left:66%;top:1085px"><b>CHECK 01</b>HS 코드와 예상 관세를 확인해요.</div>
+          <div class="route-note map-item" data-stage="4" style="left:9%;top:1195px"><b>CHECK 02</b>품목별 인증 대상을 점검해요.</div>
+          <div class="route-note map-item" data-stage="4" style="left:61%;top:1290px"><b>CHECK 03</b>인보이스와 통관 서류를 준비해요.</div>
+          <button class="route-stop map-item" data-stage="4" style="left:47%;top:1400px"><small>STAGE 04</small><strong>수입 준비</strong></button>
+
+          <div class="route-note map-item" data-stage="5" style="left:14%;top:1440px"><b>CHECK 01</b>도착 상품의 수량과 상태를 검수해요.</div>
+          <div class="route-note map-item" data-stage="5" style="left:55%;top:1515px"><b>CHECK 02</b>보관료와 출고비를 나눠봐요.</div>
+          <div class="route-note map-item" data-stage="5" style="left:19%;top:1600px"><b>CHECK 03</b>판매 속도로 재주문 시점을 정해요.</div>
+          <button class="route-stop map-item" data-stage="5" style="left:88%;top:1640px"><small>STAGE 05</small><strong>입고·판매</strong></button>
         </div>
         <article class="detail" id="detail" aria-live="polite">
-          <div class="detail-main"><div class="micro">상품 탐색 리포트</div><h2>상품 찾기, 여기서부터 알아볼게요.</h2><p>관심이 모이는 상품을 찾는 데서 시작해요. 검색 추이, 가격대, 리뷰의 불만을 보고 후보를 천천히 좁혀볼 수 있습니다.</p><div class="actions"><a class="primary" href="#report">후보 상품 살펴보기 →</a><button class="secondary">트렌드 읽는 법</button></div></div>
+          <div class="detail-main"><div class="micro">상품 탐색 리포트</div><h2>상품 찾기, 여기서부터 알아볼게요.</h2><p>관심이 모이는 상품을 찾는 데서 시작해요. 검색 추이, 가격대, 리뷰의 불만을 보고 후보를 천천히 좁혀볼 수 있습니다.</p><div class="actions"><button class="primary" id="complete-stage" data-stage="1">1단계 완료 · 다음 길 열기</button><a class="secondary" href="#report">후보 상품 살펴보기</a></div></div>
           <div class="detail-side"><div class="micro">Before you move on</div><h3>이것만 먼저 확인해요</h3><div class="check"><b>✓</b><span>가격대와 판매자 수를 비교해요</span></div><div class="check"><b>✓</b><span>반복되는 리뷰 불만을 찾아요</span></div><div class="check"><b>✓</b><span>후보 상품을 세 개 남겨요</span></div></div>
         </article>
       </section>
@@ -363,14 +453,60 @@
         {tag:'입고·판매 리포트',title:'보관부터 재주문까지 연결해요.',text:'보관비와 출고비, 판매 채널 수수료까지 포함해 마진을 확인합니다. 물량이 늘면 창고·풀필먼트 상담을 검토할 수 있어요.',checks:['보관료와 입출고비를 나눠봐요','목표 마진으로 판매가를 계산해요','재주문 기준을 기록해요'],action:'보관·출고 알아보기'}
       ];
       const detail = document.getElementById('detail');
-      document.querySelectorAll('.stage').forEach((button,index)=>{
-        button.addEventListener('click',()=>{
-          document.querySelectorAll('.stage').forEach(item=>item.classList.remove('active'));
-          button.classList.add('active');
-          const report=reports[index];
-          detail.innerHTML=`<div class="detail-main"><div class="micro">${report.tag}</div><h2>${report.title}</h2><p>${report.text}</p><div class="actions"><a class="primary" href="#report">${report.action} →</a><button class="secondary">관련 용어 보기</button></div></div><div class="detail-side"><div class="micro">Before you move on</div><h3>이것만 먼저 확인해요</h3>${report.checks.map(item=>`<div class="check"><b>✓</b><span>${item}</span></div>`).join('')}</div>`;
+      const routeBoard = document.getElementById('route-board');
+      const routeStops = [...document.querySelectorAll('.route-stop')];
+      let unlockedStage = 1;
+      let currentStage = 1;
+
+      function renderStage(stage) {
+        currentStage = stage;
+        routeStops.forEach(stop=>stop.classList.toggle('active',Number(stop.dataset.stage)===stage));
+        const report = reports[stage-1];
+        const isCurrent = stage === unlockedStage;
+        const isFinished = unlockedStage === 6;
+        const completeLabel = stage === 5 ? '전체 소싱 여정 완성' : `${stage}단계 완료 · 다음 길 열기`;
+        const completeButton = isFinished || stage < unlockedStage
+          ? '<button class="primary" disabled>완료한 단계예요</button>'
+          : `<button class="primary" id="complete-stage" data-stage="${stage}">${completeLabel}</button>`;
+        detail.innerHTML=`<div class="detail-main"><div class="micro">${report.tag}</div><h2>${report.title}</h2><p>${report.text}</p><div class="actions">${isCurrent ? completeButton : '<button class="primary" disabled>완료한 단계예요</button>'}<a class="secondary" href="#report">${report.action}</a></div></div><div class="detail-side"><div class="micro">Before you move on</div><h3>이것만 먼저 확인해요</h3>${report.checks.map(item=>`<div class="check"><b>✓</b><span>${item}</span></div>`).join('')}</div>`;
+      }
+
+      function completeCurrentStage() {
+        if (currentStage !== unlockedStage || unlockedStage > 5) return;
+        const completedStop = routeStops.find(stop=>Number(stop.dataset.stage)===currentStage);
+        completedStop?.classList.add('cleared');
+        completedStop?.classList.remove('active');
+
+        if (unlockedStage === 5) {
+          unlockedStage = 6;
+          routeBoard.classList.add('route-finished');
+          renderStage(5);
+          return;
+        }
+
+        unlockedStage += 1;
+        currentStage = unlockedStage;
+        routeBoard.style.setProperty('--route-height',`${440 + (unlockedStage-1)*320}px`);
+        routeBoard.querySelector(`[data-route="${unlockedStage}"]`)?.classList.add('is-visible');
+        routeBoard.querySelectorAll(`.map-item[data-stage="${unlockedStage}"]`).forEach(item=>item.classList.add('is-visible'));
+        renderStage(unlockedStage);
+        const nextStop = routeStops.find(stop=>Number(stop.dataset.stage)===unlockedStage);
+        window.setTimeout(()=>nextStop?.scrollIntoView({
+          behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',
+          block:'center'
+        }),760);
+      }
+
+      routeStops.forEach(stop=>{
+        stop.addEventListener('click',()=>{
+          const stage=Number(stop.dataset.stage);
+          if(stage>unlockedStage) return;
+          renderStage(stage);
           detail.scrollIntoView({behavior:'smooth',block:'nearest'});
         });
+      });
+      detail.addEventListener('click',event=>{
+        if(event.target.closest('#complete-stage')) completeCurrentStage();
       });
       document.getElementById('report-form').addEventListener('submit',event=>{
         event.preventDefault(); document.getElementById('notice').style.display='block'; event.target.reset();
