@@ -34,6 +34,38 @@
       .current h2 { margin:11px 0 7px; font-size:20px; }
       .current p { color:rgba(255,255,255,.7); font-size:14px; }
       .journey { border-top:1px solid var(--ink); padding:21px 0 0; }
+      .puzzle-intro { padding:8px 0 30px; }
+      .puzzle-copy { display:flex; align-items:end; justify-content:space-between; gap:24px; margin:8px 0 23px; }
+      .puzzle-copy h2 { margin:6px 0 0; font-size:clamp(26px,3vw,39px); letter-spacing:-.07em; }
+      .puzzle-copy p { margin:0; max-width:310px; color:var(--muted); font-size:14px; line-height:1.55; }
+      .puzzle-board-wrap { overflow-x:auto; padding:6px 0 13px; }
+      .puzzle-board { min-width:760px; display:grid; grid-template-columns:repeat(5,1fr); padding:12px 14px; border:1px solid var(--ink); border-radius:20px; background:var(--ink); }
+      .puzzle-slot { min-height:104px; display:flex; align-items:center; justify-content:center; position:relative; border:1px dashed rgba(255,255,255,.32); margin-left:-1px; color:rgba(255,255,255,.45); font-family:"DM Mono", monospace; font-size:11px; letter-spacing:.08em; }
+      .puzzle-slot:first-child { border-radius:10px 0 0 10px; }.puzzle-slot:last-child { border-radius:0 10px 10px 0; }
+      .puzzle-slot.current-slot { border-color:var(--sun); color:var(--sun); }
+      .puzzle-piece { width:100%; height:100%; min-height:102px; border:0; color:var(--ink); font-weight:700; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:5px; padding:12px; transition:transform .18s, filter .18s; user-select:none; }
+      .puzzle-piece:hover, .puzzle-piece.selected { transform:translateY(-5px) rotate(-1deg); filter:brightness(1.04); }
+      .puzzle-piece:focus-visible { outline:3px solid var(--sun); outline-offset:3px; }
+      .puzzle-piece .piece-no { font-family:"DM Mono", monospace; font-size:11px; letter-spacing:.08em; opacity:.7; }.puzzle-piece .piece-name { font-size:17px; letter-spacing:-.055em; }
+      .piece-1 { background:#e9c573; clip-path:polygon(0 0,86% 0,86% 16%,100% 16%,100% 41%,86% 41%,86% 58%,100% 58%,100% 84%,86% 84%,86% 100%,0 100%); }
+      .piece-2 { background:#e2a890; clip-path:polygon(0 0,14% 0,14% 16%,100% 16%,100% 100%,14% 100%,14% 84%,0 84%); }
+      .piece-3 { background:#f3e1b2; clip-path:polygon(0 16%,14% 16%,14% 0,86% 0,86% 16%,100% 16%,100% 84%,86% 84%,86% 100%,14% 100%,14% 84%,0 84%); }
+      .piece-4 { background:#c96b51; color:#fff9ef; clip-path:polygon(0 16%,14% 16%,14% 0,100% 0,100% 84%,14% 84%,14% 100%,0 100%); }
+      .piece-5 { background:#a9bbb2; clip-path:polygon(0 0,86% 0,86% 16%,100% 16%,100% 100%,0 100%,0 84%,14% 84%,14% 16%,0 16%); }
+      .puzzle-tray { display:flex; justify-content:space-between; gap:12px; padding:0 4px; }
+      .puzzle-tray .puzzle-piece { width:calc(20% - 10px); min-height:93px; border:1px solid rgba(40,37,33,.14); box-shadow:0 10px 20px rgba(76,58,41,.09); }
+      .puzzle-note { min-height:21px; margin:15px 0 0; font-size:13px; color:var(--muted); }.puzzle-note b { color:var(--tomato); }
+      .puzzle-note.complete { color:var(--tomato-deep); font-weight:600; }
+      .puzzle-piece.wrong { animation:shake .32s ease-in-out; }
+      @keyframes shake { 0%,100%{transform:translateX(0)} 35%{transform:translateX(-7px)} 70%{transform:translateX(7px)} }
+      .journey-map { transition:opacity .35s, transform .35s; }
+      .puzzle-active .journey-map { display:none; }
+      .journey-done .puzzle-intro { border-bottom:1px solid var(--line); margin-bottom:24px; }
+      .journey-done .puzzle-tray { display:none; }
+      .journey-done .puzzle-board { background:var(--paper-2); border-color:var(--line); }
+      .journey-done .puzzle-slot { border:0; color:var(--ink); }.journey-done .puzzle-slot .puzzle-piece { min-height:102px; }
+      .journey-done .stage { animation:reveal .45s both; }.journey-done .stage:nth-child(1){animation-delay:.05s}.journey-done .stage:nth-child(2){animation-delay:.13s}.journey-done .stage:nth-child(3){animation-delay:.21s}.journey-done .stage:nth-child(4){animation-delay:.29s}.journey-done .stage:nth-child(5){animation-delay:.37s}
+      @keyframes reveal { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:translateY(0)} }
       .journey-head { display:flex; align-items:baseline; justify-content:space-between; margin-bottom:24px; }
       .journey-head h2 { margin:0; font-size:21px; letter-spacing:-.05em; }
       .journey-head span { font-size:13px; color:var(--muted); }
@@ -74,7 +106,7 @@
       footer { border-top:1px solid var(--line); padding:24px 0 34px; display:flex; justify-content:space-between; color:var(--muted); font-size:12px; }
       .ad-slot { margin-top:34px; border-top:1px dashed var(--line); padding-top:14px; font-size:11px; color:#968e84; }
       .ad-slot span { font-family:"DM Mono", monospace; text-transform:uppercase; letter-spacing:.08em; }
-      @media (max-width:760px) { .shell{padding:0 18px} nav a:not(.nav-pill){display:none} header{height:66px}.hero{grid-template-columns:1fr;padding:52px 0 38px;gap:26px}.hero-side{border-left:0;border-top:1px solid var(--line);padding:20px 0 0}.rail{grid-template-columns:1fr 1fr;border-radius:18px}.stage{min-height:174px;border-bottom:1px solid var(--line)}.stage:nth-child(2){border-right:0}.stage:last-child{border-bottom:0}.stage h3{margin-top:28px}.detail,.report{grid-template-columns:1fr}.detail-aside{border-left:0;border-top:1px solid var(--line)}.detail-main,.detail-aside,.report{padding:25px}.journey-head span{display:none}footer{flex-direction:column;gap:8px} }
+      @media (max-width:760px) { .shell{padding:0 18px} nav a:not(.nav-pill){display:none} header{height:66px}.hero{grid-template-columns:1fr;padding:52px 0 38px;gap:26px}.hero-side{border-left:0;border-top:1px solid var(--line);padding:20px 0 0}.puzzle-copy{display:block}.puzzle-copy p{margin-top:12px}.puzzle-tray{display:grid;grid-template-columns:1fr 1fr}.puzzle-tray .puzzle-piece{width:100%;min-height:78px}.puzzle-tray .puzzle-piece:last-child{grid-column:1 / -1}.rail{grid-template-columns:1fr 1fr;border-radius:18px}.stage{min-height:174px;border-bottom:1px solid var(--line)}.stage:nth-child(2){border-right:0}.stage:last-child{border-bottom:0}.stage h3{margin-top:28px}.detail,.report{grid-template-columns:1fr}.detail-aside{border-left:0;border-top:1px solid var(--line)}.detail-main,.detail-aside,.report{padding:25px}.journey-head span{display:none}footer{flex-direction:column;gap:8px} }
     </style>
   </head>
   <body>
@@ -99,18 +131,35 @@
       </section>
 
       <section class="journey" id="journey">
-        <div class="journey-head"><h2>나의 소싱 여정</h2><span>카드를 눌러 지금 필요한 리포트를 열어보세요.</span></div>
-        <div class="rail" id="rail">
+        <div class="puzzle-intro" id="puzzle-intro">
+          <div class="micro">Puzzle the path</div>
+          <div class="puzzle-copy"><h2>소싱의 순서를<br />조각으로 맞춰보세요.</h2><p>아래 조각을 1번부터 차례대로 눌러 빈칸에 놓아보세요. 다섯 조각이 이어지면 나의 소싱 여정이 열립니다.</p></div>
+          <div class="puzzle-board-wrap"><div class="puzzle-board" id="puzzle-board" aria-label="소싱 여정 퍼즐판">
+            <div class="puzzle-slot current-slot" data-slot="1">01</div><div class="puzzle-slot" data-slot="2">02</div><div class="puzzle-slot" data-slot="3">03</div><div class="puzzle-slot" data-slot="4">04</div><div class="puzzle-slot" data-slot="5">05</div>
+          </div></div>
+          <div class="puzzle-tray" id="puzzle-tray" aria-label="소싱 여정 퍼즐 조각">
+            <button class="puzzle-piece piece-3" data-piece="3" draggable="true"><span class="piece-no">03</span><span class="piece-name">소싱·배송</span></button>
+            <button class="puzzle-piece piece-1" data-piece="1" draggable="true"><span class="piece-no">01</span><span class="piece-name">상품 찾기</span></button>
+            <button class="puzzle-piece piece-5" data-piece="5" draggable="true"><span class="piece-no">05</span><span class="piece-name">입고·판매</span></button>
+            <button class="puzzle-piece piece-2" data-piece="2" draggable="true"><span class="piece-no">02</span><span class="piece-name">상품성 검증</span></button>
+            <button class="puzzle-piece piece-4" data-piece="4" draggable="true"><span class="piece-no">04</span><span class="piece-name">수입 준비</span></button>
+          </div>
+          <p class="puzzle-note" id="puzzle-note">첫 조각은 <b>상품 찾기</b>예요. 조각을 선택해 퍼즐판에 놓아보세요.</p>
+        </div>
+        <div class="journey-map" id="journey-map">
+          <div class="journey-head"><h2>나의 소싱 여정</h2><span>카드를 눌러 지금 필요한 리포트를 열어보세요.</span></div>
+          <div class="rail" id="rail">
           <button class="stage active" data-index="0"><span class="stage-number">01<i class="stage-dot"></i></span><h3>상품 찾기</h3><p>무엇을 팔지 아직 정하지 못했어요.</p><span class="stage-arrow">↗</span></button>
           <button class="stage" data-index="1"><span class="stage-number">02<i class="stage-dot"></i></span><h3>상품성 검증</h3><p>이 상품을 실제로 팔아도 될지 궁금해요.</p><span class="stage-arrow">↗</span></button>
           <button class="stage" data-index="2"><span class="stage-number">03<i class="stage-dot"></i></span><h3>소싱·배송</h3><p>배대지와 포워딩 중 무엇이 맞을지 모르겠어요.</p><span class="stage-arrow">↗</span></button>
           <button class="stage" data-index="3"><span class="stage-number">04<i class="stage-dot"></i></span><h3>수입 준비</h3><p>관세, 인증, 통관에서 실수할까 걱정돼요.</p><span class="stage-arrow">↗</span></button>
           <button class="stage" data-index="4"><span class="stage-number">05<i class="stage-dot"></i></span><h3>입고·판매</h3><p>들여온 뒤 보관과 출고는 어떻게 할지 궁금해요.</p><span class="stage-arrow">↗</span></button>
         </div>
-        <article class="detail" id="detail" aria-live="polite">
+          <article class="detail" id="detail" aria-live="polite">
           <div class="detail-main"><div class="micro">상품 탐색 리포트</div><h2>상품 찾기, 여기서부터 알아볼게요.</h2><p>관심이 모이는 상품을 찾는 데서 시작해요. 검색 추이, 가격대, 리뷰의 불만을 보고 후보를 천천히 좁혀볼 수 있습니다.</p><div class="actions"><a class="primary" href="#report">후보 상품 살펴보기 →</a><button class="secondary">트렌드 읽는 법</button></div></div>
           <div class="detail-aside"><div class="micro">Before you move on</div><h3>이것만 먼저 확인해요</h3><div class="checks"><div class="check"><b>✓</b><span>가격대와 판매자 수를 먼저 비교해요</span></div><div class="check"><b>✓</b><span>리뷰에서 반복되는 불만을 찾아요</span></div><div class="check"><b>✓</b><span>바로 구매하지 말고 후보를 3개 남겨요</span></div></div></div>
-        </article>
+          </article>
+        </div>
       </section>
 
       <section class="report" id="report">
@@ -134,11 +183,68 @@
       function render() {
         rail.innerHTML = stages.map((s,i) => `<button class="stage ${i===selected?'active':''}" data-index="${i}"><span class="stage-number">${s.num}<i class="stage-dot"></i></span><h3>${s.title}</h3><p>${s.short}</p><span class="stage-arrow">↗</span></button>`).join('');
         const s=stages[selected]; detail.innerHTML = `<div class="detail-main"><div class="micro">${s.tag}</div><h2>${s.title}, 여기서부터 알아볼게요.</h2><p>${s.text}</p><div class="actions"><button class="primary" id="primary-action">${s.action} →</button><button class="secondary">${s.secondary}</button></div></div><div class="detail-aside"><div class="micro">Before you move on</div><h3>이것만 먼저 확인해요</h3><div class="checks">${s.checks.map(x=>`<div class="check"><b>✓</b><span>${x}</span></div>`).join('')}</div></div>`;
-        document.querySelectorAll('.stage').forEach(btn=>btn.addEventListener('click',()=>{selected=Number(btn.dataset.index);render(); detail.scrollIntoView({behavior:'smooth',block:'nearest'};}));
+        document.querySelectorAll('.stage').forEach(btn=>btn.addEventListener('click',()=>{selected=Number(btn.dataset.index);render(); detail.scrollIntoView({behavior:'smooth',block:'nearest'}); }));
         document.getElementById('primary-action').addEventListener('click',()=>{document.getElementById('report').scrollIntoView({behavior:'smooth',block:'center'});});
       }
       render();
       document.getElementById('report-form').addEventListener('submit', e=>{e.preventDefault(); document.getElementById('notice').style.display='block'; e.target.reset();});
+
+      const puzzleNames = ['','상품 찾기','상품성 검증','소싱·배송','수입 준비','입고·판매'];
+      const puzzleBoard = document.getElementById('puzzle-board');
+      const puzzleNote = document.getElementById('puzzle-note');
+      let selectedPiece = null;
+      let nextPiece = 1;
+      document.body.classList.add('puzzle-active');
+
+      function updatePuzzleNote(message, complete=false) {
+        puzzleNote.innerHTML = message;
+        puzzleNote.classList.toggle('complete', complete);
+      }
+      function selectPuzzlePiece(piece) {
+        document.querySelectorAll('.puzzle-piece').forEach(item => item.classList.remove('selected'));
+        selectedPiece = piece;
+        piece.classList.add('selected');
+        updatePuzzleNote(`<b>${piece.dataset.piece}번 ${puzzleNames[piece.dataset.piece]}</b> 조각을 골랐어요. 퍼즐판의 ${String(nextPiece).padStart(2, '0')} 칸을 눌러 놓아보세요.`);
+      }
+      function placePuzzlePiece(piece, slot) {
+        const pieceNumber = Number(piece.dataset.piece);
+        if (pieceNumber !== nextPiece || Number(slot.dataset.slot) !== nextPiece) {
+          piece.classList.remove('selected');
+          piece.classList.add('wrong');
+          updatePuzzleNote(`다음은 <b>${String(nextPiece).padStart(2, '0')} ${puzzleNames[nextPiece]}</b> 단계예요. 이 흐름부터 맞춰볼까요?`);
+          window.setTimeout(() => piece.classList.remove('wrong'), 360);
+          return;
+        }
+        slot.textContent = '';
+        slot.classList.remove('current-slot');
+        slot.appendChild(piece);
+        piece.classList.remove('selected');
+        piece.draggable = false;
+        selectedPiece = null;
+        nextPiece += 1;
+        const followingSlot = puzzleBoard.querySelector(`[data-slot="${nextPiece}"]`);
+        if (followingSlot) followingSlot.classList.add('current-slot');
+        if (nextPiece === 6) {
+          updatePuzzleNote(`<b>소싱의 흐름이 완성됐어요.</b> 이제 각 단계에서 필요한 리포트를 차례로 살펴볼 수 있어요.`, true);
+          document.body.classList.remove('puzzle-active');
+          document.body.classList.add('journey-done');
+          return;
+        }
+        updatePuzzleNote(`<b>${String(nextPiece).padStart(2, '0')} ${puzzleNames[nextPiece]}</b> 조각을 찾아 다음 칸에 놓아보세요.`);
+      }
+      document.querySelectorAll('#puzzle-tray .puzzle-piece').forEach(piece => {
+        piece.addEventListener('click', () => selectPuzzlePiece(piece));
+        piece.addEventListener('dragstart', event => { event.dataTransfer.setData('text/plain', piece.dataset.piece); selectPuzzlePiece(piece); });
+      });
+      document.querySelectorAll('.puzzle-slot').forEach(slot => {
+        slot.addEventListener('click', () => { if (selectedPiece) placePuzzlePiece(selectedPiece, slot); });
+        slot.addEventListener('dragover', event => event.preventDefault());
+        slot.addEventListener('drop', event => {
+          event.preventDefault();
+          const piece = document.querySelector(`#puzzle-tray [data-piece="${event.dataTransfer.getData('text/plain')}"]`);
+          if (piece) placePuzzlePiece(piece, slot);
+        });
+      });
     </script>
   </body>
 </html>
