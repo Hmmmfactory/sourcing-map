@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>소싱의 첫 지도</title>
+    <meta name="description" content="처음 소싱하는 셀러를 위한 상품 탐색부터 입고·판매까지의 실행 지도" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Nanum+Myeongjo:wght@700;800&family=Pretendard:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <style>
+      :root { --paper:#f1e8db; --paper-2:#fbf7f0; --ink:#282521; --muted:#746e66; --line:#d9cdbd; --tomato:#d7543d; --tomato-deep:#b9402d; --sun:#e5bf68; --white:#fffdf9; }
+      * { box-sizing:border-box; }
+      body { margin:0; background:var(--paper); color:var(--ink); font-family:Pretendard, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; letter-spacing:-.025em; }
+      button, input { font:inherit; }
+      button { cursor:pointer; }
+      .shell { max-width:1180px; margin:0 auto; padding:0 28px; }
+      header { height:76px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid rgba(40,37,33,.13); }
+      .brand { font-family:"Nanum Myeongjo", serif; font-size:21px; font-weight:800; letter-spacing:-.07em; }
+      .brand i { color:var(--tomato); font-style:normal; }
+      nav { display:flex; gap:28px; align-items:center; font-size:14px; color:var(--muted); }
+      nav a { color:inherit; text-decoration:none; }
+      .nav-pill { color:var(--ink); border:1px solid var(--ink); border-radius:999px; padding:9px 14px; font-weight:600; }
+      .hero { padding:74px 0 54px; display:grid; grid-template-columns:1.1fr .9fr; gap:44px; align-items:end; }
+      .eyebrow, .micro { font-family:"DM Mono", monospace; font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:var(--tomato); }
+      h1 { max-width:670px; margin:16px 0 18px; font-size:clamp(38px,5vw,68px); line-height:1.08; letter-spacing:-.07em; font-weight:700; }
+      h1 em { font-family:"Nanum Myeongjo", serif; font-style:normal; font-weight:800; color:var(--tomato); letter-spacing:-.1em; }
+      .hero p { max-width:510px; font-size:17px; line-height:1.65; color:var(--muted); margin:0; }
+      .hero-side { border-left:1px solid var(--line); padding:6px 0 5px 30px; }
+      .hero-side strong { display:block; font-size:18px; margin:12px 0 8px; }
+      .hero-side p { font-size:14px; line-height:1.6; }
+      .current { background:var(--ink); color:var(--white); border-radius:22px; padding:25px; margin-top:27px; }
+      .current .micro { color:var(--sun); }
+      .current h2 { margin:11px 0 7px; font-size:20px; }
+      .current p { color:rgba(255,255,255,.7); font-size:14px; }
+      .journey { border-top:1px solid var(--ink); padding:21px 0 0; }
+      .journey-head { display:flex; align-items:baseline; justify-content:space-between; margin-bottom:24px; }
+      .journey-head h2 { margin:0; font-size:21px; letter-spacing:-.05em; }
+      .journey-head span { font-size:13px; color:var(--muted); }
+      .rail { display:grid; grid-template-columns:repeat(5,1fr); border:1px solid var(--line); border-radius:22px; overflow:hidden; background:rgba(255,253,249,.35); }
+      .stage { min-height:210px; padding:23px 19px 19px; text-align:left; position:relative; background:transparent; border:0; border-right:1px solid var(--line); transition:background .2s, color .2s; color:var(--ink); }
+      .stage:last-child { border-right:0; }
+      .stage:hover, .stage.active { background:var(--tomato); color:var(--white); }
+      .stage-number { display:flex; align-items:center; justify-content:space-between; font-family:"DM Mono", monospace; font-size:11px; color:var(--tomato); }
+      .stage:hover .stage-number, .stage.active .stage-number { color:var(--sun); }
+      .stage-dot { width:7px; height:7px; border-radius:50%; background:currentColor; }
+      .stage h3 { margin:48px 0 8px; font-size:19px; letter-spacing:-.05em; }
+      .stage p { font-size:13px; line-height:1.52; color:var(--muted); margin:0; }
+      .stage:hover p, .stage.active p { color:rgba(255,255,255,.74); }
+      .stage-arrow { position:absolute; bottom:19px; right:19px; font-size:17px; }
+      .detail { margin-top:14px; background:var(--white); border:1px solid var(--line); border-radius:22px; overflow:hidden; display:grid; grid-template-columns:1.2fr 1fr; min-height:230px; }
+      .detail-main { padding:31px 34px; }
+      .detail-main h2 { font-size:26px; margin:10px 0 11px; letter-spacing:-.06em; }
+      .detail-main p { color:var(--muted); line-height:1.62; max-width:530px; font-size:15px; margin:0; }
+      .detail-aside { padding:29px 30px; background:#efe4d3; border-left:1px solid var(--line); }
+      .detail-aside h3 { font-size:13px; margin:4px 0 14px; }
+      .checks { display:grid; gap:9px; }
+      .check { display:flex; gap:9px; align-items:flex-start; font-size:13px; line-height:1.4; }
+      .check b { color:var(--tomato); }
+      .actions { display:flex; gap:9px; margin-top:22px; flex-wrap:wrap; }
+      .primary, .secondary { padding:12px 15px; border-radius:11px; font-weight:600; border:0; font-size:14px; }
+      .primary { background:var(--tomato); color:#fff; }
+      .primary:hover { background:var(--tomato-deep); }
+      .secondary { background:transparent; color:var(--ink); border:1px solid var(--line); }
+      .report { margin:65px 0; padding:37px; background:var(--ink); color:var(--white); border-radius:25px; display:grid; grid-template-columns:1.05fr .95fr; gap:45px; align-items:center; }
+      .report h2 { font-size:30px; letter-spacing:-.06em; margin:12px 0; }
+      .report p { color:rgba(255,255,255,.68); line-height:1.6; font-size:15px; margin:0; }
+      .form { display:flex; flex-wrap:wrap; gap:9px; }
+      .form input { min-width:0; flex:1 1 210px; background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.26); border-radius:11px; padding:13px 14px; color:#fff; outline:none; }
+      .form input::placeholder { color:rgba(255,255,255,.5); }
+      .form button { padding:13px 17px; border:0; border-radius:11px; background:var(--sun); color:var(--ink); font-weight:700; }
+      .consent { font-size:11px; line-height:1.55; color:rgba(255,255,255,.48); margin-top:12px; }
+      .notice { display:none; margin-top:12px; font-size:13px; color:var(--sun); }
+      footer { border-top:1px solid var(--line); padding:24px 0 34px; display:flex; justify-content:space-between; color:var(--muted); font-size:12px; }
+      .ad-slot { margin-top:34px; border-top:1px dashed var(--line); padding-top:14px; font-size:11px; color:#968e84; }
+      .ad-slot span { font-family:"DM Mono", monospace; text-transform:uppercase; letter-spacing:.08em; }
+      @media (max-width:760px) { .shell{padding:0 18px} nav a:not(.nav-pill){display:none} header{height:66px}.hero{grid-template-columns:1fr;padding:52px 0 38px;gap:26px}.hero-side{border-left:0;border-top:1px solid var(--line);padding:20px 0 0}.rail{grid-template-columns:1fr 1fr;border-radius:18px}.stage{min-height:174px;border-bottom:1px solid var(--line)}.stage:nth-child(2){border-right:0}.stage:last-child{border-bottom:0}.stage h3{margin-top:28px}.detail,.report{grid-template-columns:1fr}.detail-aside{border-left:0;border-top:1px solid var(--line)}.detail-main,.detail-aside,.report{padding:25px}.journey-head span{display:none}footer{flex-direction:column;gap:8px} }
+    </style>
+  </head>
+  <body>
+    <main class="shell">
+      <header>
+        <div class="brand">sourcing<i>:</i> map</div>
+        <nav><a href="#journey">소싱 여정</a><a href="#report">맞춤 리포트</a><a class="nav-pill" href="#journey">지금 시작하기</a></nav>
+      </header>
+
+      <section class="hero">
+        <div>
+          <div class="eyebrow">The first map for new sellers</div>
+          <h1>소싱의 처음부터<br /><em>판매의 순간까지.</em></h1>
+          <p>상품을 찾는 일부터 배대지, 통관, 보관까지. 지금 궁금한 단계에서 시작해 필요한 정보만 차례대로 확인하세요.</p>
+        </div>
+        <aside class="hero-side">
+          <div class="micro">A calm way to start</div>
+          <strong>모든 것을 지금 결정할 필요는 없어요.</strong>
+          <p>단계별로 읽고, 내 상황에 맞을 때만 다음으로 넘어가면 됩니다.</p>
+          <div class="current"><div class="micro">today's first step</div><h2>무엇을 팔지부터 살펴볼까요?</h2><p>상품을 정하지 못했어도 괜찮습니다. 후보를 찾는 법부터 안내할게요.</p></div>
+        </aside>
+      </section>
+
+      <section class="journey" id="journey">
+        <div class="journey-head"><h2>나의 소싱 여정</h2><span>카드를 눌러 지금 필요한 리포트를 열어보세요.</span></div>
+        <div class="rail" id="rail">
+          <button class="stage active" data-index="0"><span class="stage-number">01<i class="stage-dot"></i></span><h3>상품 찾기</h3><p>무엇을 팔지 아직 정하지 못했어요.</p><span class="stage-arrow">↗</span></button>
+          <button class="stage" data-index="1"><span class="stage-number">02<i class="stage-dot"></i></span><h3>상품성 검증</h3><p>이 상품을 실제로 팔아도 될지 궁금해요.</p><span class="stage-arrow">↗</span></button>
+          <button class="stage" data-index="2"><span class="stage-number">03<i class="stage-dot"></i></span><h3>소싱·배송</h3><p>배대지와 포워딩 중 무엇이 맞을지 모르겠어요.</p><span class="stage-arrow">↗</span></button>
+          <button class="stage" data-index="3"><span class="stage-number">04<i class="stage-dot"></i></span><h3>수입 준비</h3><p>관세, 인증, 통관에서 실수할까 걱정돼요.</p><span class="stage-arrow">↗</span></button>
+          <button class="stage" data-index="4"><span class="stage-number">05<i class="stage-dot"></i></span><h3>입고·판매</h3><p>들여온 뒤 보관과 출고는 어떻게 할지 궁금해요.</p><span class="stage-arrow">↗</span></button>
+        </div>
+        <article class="detail" id="detail" aria-live="polite">
+          <div class="detail-main"><div class="micro">상품 탐색 리포트</div><h2>상품 찾기, 여기서부터 알아볼게요.</h2><p>관심이 모이는 상품을 찾는 데서 시작해요. 검색 추이, 가격대, 리뷰의 불만을 보고 후보를 천천히 좁혀볼 수 있습니다.</p><div class="actions"><a class="primary" href="#report">후보 상품 살펴보기 →</a><button class="secondary">트렌드 읽는 법</button></div></div>
+          <div class="detail-aside"><div class="micro">Before you move on</div><h3>이것만 먼저 확인해요</h3><div class="checks"><div class="check"><b>✓</b><span>가격대와 판매자 수를 먼저 비교해요</span></div><div class="check"><b>✓</b><span>리뷰에서 반복되는 불만을 찾아요</span></div><div class="check"><b>✓</b><span>바로 구매하지 말고 후보를 3개 남겨요</span></div></div></div>
+        </article>
+      </section>
+
+      <section class="report" id="report">
+        <div><div class="micro" style="color:var(--sun)">When you are ready</div><h2>내 상황에 맞는<br />소싱·물류 리포트</h2><p>중국·베트남 소싱을 준비 중이라면, 상품·물량·현재 단계를 기준으로 다음에 확인할 정보를 정리해 메일로 보내드립니다.</p></div>
+        <div><form class="form" id="report-form"><input aria-label="이메일" type="email" placeholder="이메일 주소" required /><button type="submit">리포트 받아보기</button></form><div class="consent">리포트 발송을 위해 이메일을 수집합니다. 광고성 정보 수신은 별도 동의 후에만 발송됩니다.</div><div class="notice" id="notice">리포트 요청을 받았어요. 입력한 이메일로 준비 소식을 보내드릴게요.</div></div>
+      </section>
+
+      <div class="ad-slot"><span>Advertisement</span> · 관련 서비스 광고는 가이드 내용과 명확히 구분되어 표시됩니다.</div>
+      <footer><span>© 2026 Sourcing Map</span><span>상품성 · 배송 · 통관 · 보관을 한 흐름으로</span></footer>
+    </main>
+
+    <script>
+      const stages = [
+        { num:'01', title:'상품 찾기', short:'무엇을 팔지 아직 정하지 못했어요.', tag:'상품 탐색 리포트', text:'관심이 모이는 상품을 찾는 데서 시작해요. 검색 추이, 가격대, 리뷰의 불만을 보고 후보를 천천히 좁혀볼 수 있습니다.', checks:['가격대와 판매자 수를 먼저 비교해요','리뷰에서 반복되는 불만을 찾아요','바로 구매하지 말고 후보를 3개 남겨요'], action:'후보 상품 살펴보기', secondary:'트렌드 읽는 법'},
+        { num:'02', title:'상품성 검증', short:'이 상품을 실제로 팔아도 될지 궁금해요.', tag:'판매 가능성 리포트', text:'후보를 찾았다면 수요, 경쟁, 예상 마진을 차례로 확인합니다. 최종 상품성 판단은 소싱 판결사 같은 전문 분석 도구에서 이어갈 수 있어요.', checks:['매입가 외 배송·관세·수수료를 포함해요','경쟁 상품의 가격 폭을 살펴봐요','판매 가능성 분석으로 근거를 보강해요'], action:'판매 가능성 분석하기', secondary:'총원가 체크리스트'},
+        { num:'03', title:'소싱·배송', short:'배대지와 포워딩 중 무엇이 맞을지 모르겠어요.', tag:'배송 방식 리포트', text:'샘플과 소량은 배대지, 반복 수입과 박스 단위 물량은 포워딩이 더 맞을 수 있습니다. 상품의 부피와 수량을 기준으로 방식부터 비교해보세요.', checks:['실중량과 부피무게를 함께 확인해요','여러 공급처라면 합배송 필요를 체크해요','견적에는 고정 부대비용까지 포함해요'], action:'배송 방식 비교하기', secondary:'CBM 쉽게 이해하기'},
+        { num:'04', title:'수입 준비', short:'관세, 인증, 통관에서 실수할까 걱정돼요.', tag:'통관·인증 리포트', text:'수입 전에는 품목별 인증과 통관 주의사항을 미리 살펴보는 것이 중요합니다. 확정 판단이 필요한 항목은 관세사나 인증 기관에 확인하세요.', checks:['HS 코드와 관부가세를 추정해요','KC·식품·화장품 등 품목별 규제를 확인해요','인보이스와 패킹리스트를 미리 점검해요'], action:'수입 전 체크하기', secondary:'통관 용어 보기'},
+        { num:'05', title:'입고·판매', short:'들여온 뒤 보관과 출고는 어떻게 할지 궁금해요.', tag:'입고·판매 리포트', text:'첫 입고 뒤에는 보관비와 출고비, 판매 채널 수수료까지 포함해 다시 마진을 확인합니다. 물량이 늘면 창고·풀필먼트 상담을 검토할 수 있어요.', checks:['보관료·입출고비를 분리해 비교해요','판매가와 목표 마진을 다시 계산해요','재주문 기준을 간단히 기록해요'], action:'보관·출고 알아보기', secondary:'마진 계산하기'}
+      ];
+      const rail = document.getElementById('rail'); const detail = document.getElementById('detail'); let selected = 0;
+      function render() {
+        rail.innerHTML = stages.map((s,i) => `<button class="stage ${i===selected?'active':''}" data-index="${i}"><span class="stage-number">${s.num}<i class="stage-dot"></i></span><h3>${s.title}</h3><p>${s.short}</p><span class="stage-arrow">↗</span></button>`).join('');
+        const s=stages[selected]; detail.innerHTML = `<div class="detail-main"><div class="micro">${s.tag}</div><h2>${s.title}, 여기서부터 알아볼게요.</h2><p>${s.text}</p><div class="actions"><button class="primary" id="primary-action">${s.action} →</button><button class="secondary">${s.secondary}</button></div></div><div class="detail-aside"><div class="micro">Before you move on</div><h3>이것만 먼저 확인해요</h3><div class="checks">${s.checks.map(x=>`<div class="check"><b>✓</b><span>${x}</span></div>`).join('')}</div></div>`;
+        document.querySelectorAll('.stage').forEach(btn=>btn.addEventListener('click',()=>{selected=Number(btn.dataset.index);render(); detail.scrollIntoView({behavior:'smooth',block:'nearest'};}));
+        document.getElementById('primary-action').addEventListener('click',()=>{document.getElementById('report').scrollIntoView({behavior:'smooth',block:'center'});});
+      }
+      render();
+      document.getElementById('report-form').addEventListener('submit', e=>{e.preventDefault(); document.getElementById('notice').style.display='block'; e.target.reset();});
+    </script>
+  </body>
+</html>
