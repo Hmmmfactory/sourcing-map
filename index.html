@@ -98,8 +98,13 @@
       .pizza-label.on { fill:var(--ink); font-weight:700; }
       .topping { opacity:0; transform:scale(.2); transform-origin:center; transition:opacity .3s,transform .35s; pointer-events:none; }
       .pizza-board.complete .topping { opacity:1; transform:scale(1); }
-      .pizza-board.complete { animation:pizza-win .7s cubic-bezier(.2,.9,.2,1); }
-      @keyframes pizza-win { 40%{transform:scale(1.05) rotate(-2deg)} 70%{transform:scale(.98) rotate(1deg)} }
+      .pizza-board.complete { animation:pizza-win 1.05s cubic-bezier(.45,.05,.2,1) both; will-change:transform; }
+      @keyframes pizza-win {
+        0% { transform:scale(1) rotate(0); }
+        62% { transform:scale(1.045) rotate(360deg); }
+        82% { transform:scale(.985) rotate(360deg); }
+        100% { transform:scale(1) rotate(360deg); }
+      }
       .win-stamp {
         position:absolute; z-index:4; right:2%; top:4%; padding:7px 10px; border-radius:999px;
         background:var(--tomato); color:#fff; font:500 10px "DM Mono",monospace;
@@ -312,11 +317,24 @@
         updateScene();
         pulseGame();
         if (completed === 5) {
+          const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+          const journey = document.getElementById('journey');
+          const openJourney = () => {
+            document.body.classList.remove('game-running');
+            document.body.classList.add('game-complete','journey-unlocked');
+            window.requestAnimationFrame(() => journey.scrollIntoView({
+              behavior: prefersReducedMotion ? 'auto' : 'smooth',
+              block: 'start'
+            }));
+          };
+          if (prefersReducedMotion) {
+            window.setTimeout(openJourney,80);
+          } else {
+            pizzaBoard.addEventListener('animationend',openJourney,{once:true});
+          }
           pizzaBoard.classList.add('complete');
           pizzaWrap.classList.add('won');
-          document.body.classList.remove('game-running');
-          document.body.classList.add('game-complete','journey-unlocked');
-          message.innerHTML = '<b>피자와 소싱 지도가 완성됐어요!</b> 아래에서 각 단계의 리포트를 열어보세요.';
+          message.innerHTML = '<b>피자가 완성됐어요!</b> 한 바퀴 돌고 소싱 여정으로 이동할게요.';
           return;
         }
         message.innerHTML = `<b>정답이에요.</b> 피자가 한 조각 채워졌어요. 이제 ${5-completed}조각 남았습니다.`;
