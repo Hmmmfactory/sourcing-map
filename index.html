@@ -2,259 +2,367 @@
 <html lang="ko">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>소싱의 첫 지도</title>
-    <meta name="description" content="처음 소싱하는 셀러를 위한 상품 탐색부터 입고·판매까지의 실행 지도" />
+    <meta name="description" content="피자 조각 게임으로 배우는 초보 셀러의 소싱 여정" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Nanum+Myeongjo:wght@700;800&family=Pretendard:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Nanum+Myeongjo:wght@700;800&display=swap" rel="stylesheet" />
     <style>
-      :root { --paper:#f1e8db; --paper-2:#fbf7f0; --ink:#282521; --muted:#746e66; --line:#d9cdbd; --tomato:#d7543d; --tomato-deep:#b9402d; --sun:#e5bf68; --white:#fffdf9; }
+      :root {
+        --ink:#282521; --muted:#746e66; --line:#d6c8b7; --paper:#fbf7f0;
+        --tomato:#d7543d; --tomato-deep:#b9402d; --sun:#e6bc61; --white:#fffdf9;
+        --scene-bg:#f1e8db; --scene-glow:rgba(230,188,97,.18);
+      }
       * { box-sizing:border-box; }
-      body { margin:0; background:var(--paper); color:var(--ink); font-family:Pretendard, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; letter-spacing:-.025em; }
-      button, input { font:inherit; }
-      button { cursor:pointer; }
-      .shell { max-width:1180px; margin:0 auto; padding:0 28px; }
-      header { height:76px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid rgba(40,37,33,.13); }
-      .brand { font-family:"Nanum Myeongjo", serif; font-size:21px; font-weight:800; letter-spacing:-.07em; }
+      html { scroll-behavior:smooth; }
+      body {
+        margin:0; color:var(--ink); background:var(--scene-bg);
+        font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans KR",sans-serif;
+        letter-spacing:-.025em; transition:background-color .75s cubic-bezier(.2,.8,.2,1);
+      }
+      body::before {
+        content:""; position:fixed; inset:0; z-index:-1; pointer-events:none;
+        background:radial-gradient(circle at 78% 24%,var(--scene-glow),transparent 43%);
+        transition:background .75s ease;
+      }
+      body.progress-1 { --scene-bg:#f0dfcf; --scene-glow:rgba(230,168,112,.34); }
+      body.progress-2 { --scene-bg:#efcfb9; --scene-glow:rgba(218,111,75,.31); }
+      body.progress-3 { --scene-bg:#edb9a1; --scene-glow:rgba(215,84,61,.34); }
+      body.progress-4 { --scene-bg:#e99a7d; --scene-glow:rgba(255,239,182,.31); }
+      body.progress-5 { --scene-bg:#df785d; --scene-glow:rgba(255,244,201,.43); }
+      body.reward-flash::after {
+        content:""; position:fixed; inset:0; z-index:30; pointer-events:none;
+        background:rgba(255,244,201,.58); animation:reward-flash .55s ease-out both;
+      }
+      @keyframes reward-flash { from{opacity:1} to{opacity:0} }
+      button,input { font:inherit; } button { cursor:pointer; }
+      button:focus-visible,a:focus-visible,input:focus-visible { outline:3px solid var(--sun); outline-offset:3px; }
+      .shell { width:min(1180px,calc(100% - 56px)); margin:0 auto; }
+      header {
+        height:74px; display:flex; align-items:center; justify-content:space-between;
+        border-bottom:1px solid rgba(40,37,33,.15);
+      }
+      .brand { font-family:"Nanum Myeongjo",serif; font-size:21px; font-weight:800; letter-spacing:-.07em; }
       .brand i { color:var(--tomato); font-style:normal; }
-      nav { display:flex; gap:28px; align-items:center; font-size:14px; color:var(--muted); }
-      nav a { color:inherit; text-decoration:none; }
-      .nav-pill { color:var(--ink); border:1px solid var(--ink); border-radius:999px; padding:9px 14px; font-weight:600; }
-      .hero { padding:74px 0 54px; display:grid; grid-template-columns:1.1fr .9fr; gap:44px; align-items:end; }
-      .eyebrow, .micro { font-family:"DM Mono", monospace; font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:var(--tomato); }
-      h1 { max-width:670px; margin:16px 0 18px; font-size:clamp(38px,5vw,68px); line-height:1.08; letter-spacing:-.07em; font-weight:700; }
-      h1 em { font-family:"Nanum Myeongjo", serif; font-style:normal; font-weight:800; color:var(--tomato); letter-spacing:-.1em; }
-      .hero p { max-width:510px; font-size:17px; line-height:1.65; color:var(--muted); margin:0; }
-      .hero-side { border-left:1px solid var(--line); padding:6px 0 5px 30px; }
-      .hero-side strong { display:block; font-size:18px; margin:12px 0 8px; }
-      .hero-side p { font-size:14px; line-height:1.6; }
-      .current { background:var(--ink); color:var(--white); border-radius:22px; padding:25px; margin-top:27px; }
-      .current .micro { color:var(--sun); }
-      .current h2 { margin:11px 0 7px; font-size:20px; }
-      .current p { color:rgba(255,255,255,.7); font-size:14px; }
-      .journey { border-top:1px solid var(--ink); padding:21px 0 0; }
-      .puzzle-intro { padding:8px 0 30px; }
-      .puzzle-copy { display:flex; align-items:end; justify-content:space-between; gap:24px; margin:8px 0 23px; }
-      .puzzle-copy h2 { margin:6px 0 0; font-size:clamp(26px,3vw,39px); letter-spacing:-.07em; }
-      .puzzle-copy p { margin:0; max-width:310px; color:var(--muted); font-size:14px; line-height:1.55; }
-      .puzzle-status { display:flex; align-items:center; justify-content:space-between; margin:0 0 11px; color:var(--muted); font-family:"DM Mono", monospace; font-size:11px; letter-spacing:.06em; }
-      .progress-dots { display:flex; gap:5px; }.progress-dots i { width:8px; height:8px; border:1px solid var(--tomato); border-radius:50%; }.progress-dots i.filled { background:var(--tomato); box-shadow:0 0 0 3px rgba(215,84,61,.12); }
-      .puzzle-board-wrap { overflow-x:auto; padding:6px 0 13px; }
-      .puzzle-board { min-width:760px; display:grid; grid-template-columns:repeat(5,1fr); padding:12px 14px; border:1px solid var(--ink); border-radius:20px; background:var(--ink); }
-      .puzzle-slot { min-height:104px; display:flex; align-items:center; justify-content:center; position:relative; overflow:visible; border:1px dashed rgba(255,255,255,.32); margin-left:-1px; color:rgba(255,255,255,.45); font-family:"DM Mono", monospace; font-size:11px; letter-spacing:.08em; }
-      .puzzle-slot:first-child { border-radius:10px 0 0 10px; }.puzzle-slot:last-child { border-radius:0 10px 10px 0; }
-      .puzzle-slot.current-slot { border-color:var(--sun); color:var(--sun); }
-      .puzzle-piece { width:100%; height:100%; min-height:102px; border:0; background:transparent; color:var(--ink); font-weight:700; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:5px; padding:12px; position:relative; overflow:visible; transition:transform .18s, filter .18s; user-select:none; }
-      .piece-shape { position:absolute; z-index:0; left:0; top:0; width:120%; height:100%; overflow:visible; pointer-events:none; }.piece-shape path { stroke:rgba(40,37,33,.16); stroke-width:1.4; vector-effect:non-scaling-stroke; }
-      .puzzle-piece > span { position:relative; z-index:1; }.piece-1 .piece-shape path { fill:#e9c573; }.piece-2 .piece-shape path { fill:#e2a890; }.piece-3 .piece-shape path { fill:#f3e1b2; }.piece-4 .piece-shape path { fill:#c96b51; }.piece-5 .piece-shape path { fill:#a9bbb2; }
-      .puzzle-piece:hover, .puzzle-piece.selected { transform:translateY(-5px) rotate(-1deg); filter:brightness(1.04); }
-      .puzzle-piece:focus-visible { outline:3px solid var(--sun); outline-offset:3px; }
-      .puzzle-piece .piece-no { font-family:"DM Mono", monospace; font-size:11px; letter-spacing:.08em; opacity:.7; }.puzzle-piece .piece-name { font-size:17px; letter-spacing:-.055em; }
-      .piece-4 { color:#fff9ef; }.puzzle-tray { display:flex; justify-content:space-between; gap:12px; padding:0 4px; }
-      .puzzle-tray .puzzle-piece { width:calc(20% - 10px); min-height:93px; box-shadow:0 10px 20px rgba(76,58,41,.09); }
-      .puzzle-note { min-height:21px; margin:15px 0 0; font-size:13px; color:var(--muted); }.puzzle-note b { color:var(--tomato); }
-      .puzzle-note.complete { color:var(--tomato-deep); font-weight:600; }
-      .puzzle-piece.wrong { animation:shake .32s ease-in-out; }
-      @keyframes shake { 0%,100%{transform:translateX(0)} 35%{transform:translateX(-7px)} 70%{transform:translateX(7px)} }
-      .journey-map { transition:opacity .35s, transform .35s; }
-      .puzzle-active .journey-map { display:none; }
-      .journey-done .puzzle-intro { border-bottom:1px solid var(--line); margin-bottom:24px; }
-      .journey-done .puzzle-tray { display:none; }
-      .journey-done .puzzle-board { background:var(--paper-2); border-color:var(--line); }
-      .journey-done .puzzle-slot { border:0; color:var(--ink); }.journey-done .puzzle-slot .puzzle-piece { min-height:102px; }
-      .puzzle-board.complete { animation:complete-pulse .65s ease-out; box-shadow:0 0 0 8px rgba(215,84,61,.1); }.puzzle-board.complete::after { content:"✓ FLOW COMPLETE"; position:absolute; right:25px; top:-11px; padding:5px 9px; border-radius:999px; background:var(--tomato); color:#fff; font:10px "DM Mono",monospace; letter-spacing:.08em; }.puzzle-board { position:relative; }
-      @keyframes complete-pulse { 50%{transform:scale(1.012)} }
-      .journey-done .stage { animation:reveal .45s both; }.journey-done .stage:nth-child(1){animation-delay:.05s}.journey-done .stage:nth-child(2){animation-delay:.13s}.journey-done .stage:nth-child(3){animation-delay:.21s}.journey-done .stage:nth-child(4){animation-delay:.29s}.journey-done .stage:nth-child(5){animation-delay:.37s}
-      @keyframes reveal { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:translateY(0)} }
-      .journey-head { display:flex; align-items:baseline; justify-content:space-between; margin-bottom:24px; }
-      .journey-head h2 { margin:0; font-size:21px; letter-spacing:-.05em; }
-      .journey-head span { font-size:13px; color:var(--muted); }
-      .rail { display:grid; grid-template-columns:repeat(5,1fr); border:1px solid var(--line); border-radius:22px; overflow:hidden; background:rgba(255,253,249,.35); }
-      .stage { min-height:210px; padding:23px 19px 19px; text-align:left; position:relative; background:transparent; border:0; border-right:1px solid var(--line); transition:background .2s, color .2s; color:var(--ink); }
+      nav { display:flex; align-items:center; gap:27px; font-size:14px; }
+      nav a { color:var(--muted); text-decoration:none; }
+      .nav-pill { padding:9px 14px; border:1px solid var(--ink); border-radius:999px; color:var(--ink); font-weight:700; }
+
+      .game-hero {
+        min-height:calc(100vh - 74px); display:grid; grid-template-columns:.76fr 1.24fr;
+        gap:48px; align-items:center; padding:50px 0 66px;
+      }
+      .eyebrow,.micro {
+        color:var(--tomato); font:500 11px "DM Mono",monospace;
+        letter-spacing:.09em; text-transform:uppercase;
+      }
+      .game-copy h1 {
+        margin:16px 0 18px; font-size:clamp(42px,5.4vw,70px); line-height:1.06;
+        letter-spacing:-.075em;
+      }
+      .game-copy h1 em { font-family:"Nanum Myeongjo",serif; color:var(--tomato); font-style:normal; }
+      .game-copy > p { max-width:430px; margin:0; color:var(--muted); font-size:16px; line-height:1.68; }
+      .rule-card {
+        margin-top:31px; padding:18px 19px; border:1px solid rgba(40,37,33,.15);
+        border-radius:15px; background:rgba(255,253,249,.38);
+      }
+      .rule-card strong { display:block; margin-bottom:6px; font-size:14px; }
+      .rule-card span { color:var(--muted); font-size:13px; line-height:1.55; }
+
+      .game-panel {
+        padding:23px; background:rgba(255,253,249,.72); border:1px solid rgba(40,37,33,.18);
+        border-radius:29px; box-shadow:0 24px 70px rgba(65,44,27,.13); backdrop-filter:blur(8px);
+      }
+      .game-status { display:flex; align-items:center; justify-content:space-between; margin-bottom:13px; }
+      .game-status strong { font:500 12px "DM Mono",monospace; letter-spacing:.04em; }
+      .lives { display:flex; gap:5px; }
+      .lives i { width:9px; height:9px; border:1px solid var(--tomato); border-radius:50%; }
+      .lives i.on { background:var(--tomato); box-shadow:0 0 0 3px rgba(215,84,61,.1); }
+      .progress-track { height:5px; border-radius:999px; background:#e8ddd0; overflow:hidden; margin-bottom:19px; }
+      .progress-fill { width:0; height:100%; background:var(--tomato); transition:width .5s cubic-bezier(.2,.8,.2,1); }
+      .game-area { display:grid; grid-template-columns:minmax(250px,1fr) 210px; gap:22px; align-items:center; }
+      .pizza-wrap { position:relative; display:grid; place-items:center; aspect-ratio:1; }
+      .pizza-shadow { position:absolute; width:78%; aspect-ratio:1; border-radius:50%; background:rgba(56,39,26,.16); filter:blur(16px); transform:translateY(18px); }
+      .pizza-board { position:relative; z-index:1; width:100%; max-width:430px; overflow:visible; }
+      .pizza-base { fill:#fffaf0; stroke:#cba15c; stroke-width:13; }
+      .pizza-slot {
+        fill:rgba(232,215,192,.25); stroke:#bcaa94; stroke-width:2; stroke-dasharray:7 6;
+        cursor:pointer; transition:fill .28s,filter .28s,transform .2s; transform-origin:150px 150px;
+      }
+      .pizza-slot:hover,.pizza-slot.target { fill:rgba(230,188,97,.25); filter:drop-shadow(0 0 7px rgba(215,84,61,.36)); }
+      .pizza-slot.wrong { animation:slot-wrong .35s ease; }
+      .pizza-slot[data-slot="1"].filled { fill:#efc96e; }
+      .pizza-slot[data-slot="2"].filled { fill:#e4a48a; }
+      .pizza-slot[data-slot="3"].filled { fill:#f1dea8; }
+      .pizza-slot[data-slot="4"].filled { fill:#cb6b50; }
+      .pizza-slot[data-slot="5"].filled { fill:#a9bbb2; }
+      .pizza-slot.filled { stroke:#fff4dc; stroke-width:2.5; stroke-dasharray:0; cursor:default; }
+      @keyframes slot-wrong { 35%{transform:scale(.96)} 70%{transform:scale(1.025)} }
+      .pizza-label { pointer-events:none; font:500 12px "DM Mono",monospace; fill:rgba(40,37,33,.45); text-anchor:middle; }
+      .pizza-label.on { fill:var(--ink); font-weight:700; }
+      .topping { opacity:0; transform:scale(.2); transform-origin:center; transition:opacity .3s,transform .35s; pointer-events:none; }
+      .pizza-board.complete .topping { opacity:1; transform:scale(1); }
+      .pizza-board.complete { animation:pizza-win .7s cubic-bezier(.2,.9,.2,1); }
+      @keyframes pizza-win { 40%{transform:scale(1.05) rotate(-2deg)} 70%{transform:scale(.98) rotate(1deg)} }
+      .win-stamp {
+        position:absolute; z-index:4; right:2%; top:4%; padding:7px 10px; border-radius:999px;
+        background:var(--tomato); color:#fff; font:500 10px "DM Mono",monospace;
+        letter-spacing:.08em; opacity:0; transform:scale(.7) rotate(8deg); transition:.35s;
+      }
+      .pizza-wrap.won .win-stamp { opacity:1; transform:scale(1) rotate(-4deg); }
+
+      .piece-tray { display:grid; gap:8px; }
+      .pizza-piece {
+        display:grid; grid-template-columns:48px 1fr; gap:10px; align-items:center;
+        min-height:58px; padding:7px 10px; border:1px solid var(--line); border-radius:13px;
+        background:var(--white); color:var(--ink); text-align:left; transition:transform .18s,border-color .18s,opacity .25s;
+      }
+      .pizza-piece:hover,.pizza-piece.selected { transform:translateX(-5px); border-color:var(--tomato); }
+      .pizza-piece.used { opacity:.25; pointer-events:none; transform:scale(.96); }
+      .pizza-piece.wrong { animation:piece-wrong .34s ease; }
+      @keyframes piece-wrong { 30%{transform:translateX(-8px)} 65%{transform:translateX(7px)} }
+      .piece-icon { width:46px; height:46px; overflow:visible; }
+      .mini-base { fill:#f3e8d9; stroke:#d3b987; stroke-width:8; }
+      .mini-wedge { stroke:#fff8e8; stroke-width:2; }
+      .pizza-piece[data-piece="1"] .mini-wedge { fill:#efc96e; }
+      .pizza-piece[data-piece="2"] .mini-wedge { fill:#e4a48a; }
+      .pizza-piece[data-piece="3"] .mini-wedge { fill:#f1dea8; }
+      .pizza-piece[data-piece="4"] .mini-wedge { fill:#cb6b50; }
+      .pizza-piece[data-piece="5"] .mini-wedge { fill:#a9bbb2; }
+      .piece-meta small { display:block; margin-bottom:3px; color:var(--tomato); font:500 9px "DM Mono",monospace; }
+      .piece-meta b { display:block; font-size:13px; letter-spacing:-.04em; }
+      .game-message { min-height:25px; margin:17px 0 0; color:var(--muted); font-size:13px; line-height:1.5; }
+      .game-message b { color:var(--tomato-deep); }
+      .unlock-link { display:none; margin-top:14px; color:var(--ink); font-weight:700; font-size:13px; text-decoration:none; }
+      .game-complete .unlock-link { display:inline-block; }
+
+      .journey-map { padding:72px 0 0; }
+      .game-running .journey-map { display:none; }
+      .journey-head { display:flex; justify-content:space-between; align-items:end; gap:24px; border-top:1px solid var(--ink); padding-top:21px; margin-bottom:23px; }
+      .journey-head h2 { margin:0; font-size:31px; letter-spacing:-.06em; }
+      .journey-head p { margin:0; max-width:350px; color:var(--muted); font-size:13px; line-height:1.55; }
+      .rail { display:grid; grid-template-columns:repeat(5,1fr); overflow:hidden; border:1px solid var(--line); border-radius:22px; background:rgba(255,253,249,.55); }
+      .stage { min-height:205px; padding:22px 18px; position:relative; border:0; border-right:1px solid var(--line); background:transparent; text-align:left; color:var(--ink); transition:.2s; }
       .stage:last-child { border-right:0; }
-      .stage:hover, .stage.active { background:var(--tomato); color:var(--white); }
-      .stage-number { display:flex; align-items:center; justify-content:space-between; font-family:"DM Mono", monospace; font-size:11px; color:var(--tomato); }
-      .stage:hover .stage-number, .stage.active .stage-number { color:var(--sun); }
-      .stage-dot { width:7px; height:7px; border-radius:50%; background:currentColor; }
-      .stage h3 { margin:48px 0 8px; font-size:19px; letter-spacing:-.05em; }
-      .stage p { font-size:13px; line-height:1.52; color:var(--muted); margin:0; }
-      .stage:hover p, .stage.active p { color:rgba(255,255,255,.74); }
-      .stage-arrow { position:absolute; bottom:19px; right:19px; font-size:17px; }
-      .detail { margin-top:14px; background:var(--white); border:1px solid var(--line); border-radius:22px; overflow:hidden; display:grid; grid-template-columns:1.2fr 1fr; min-height:230px; }
-      .detail-main { padding:31px 34px; }
-      .detail-main h2 { font-size:26px; margin:10px 0 11px; letter-spacing:-.06em; }
-      .detail-main p { color:var(--muted); line-height:1.62; max-width:530px; font-size:15px; margin:0; }
-      .detail-aside { padding:29px 30px; background:#efe4d3; border-left:1px solid var(--line); }
-      .detail-aside h3 { font-size:13px; margin:4px 0 14px; }
-      .checks { display:grid; gap:9px; }
-      .check { display:flex; gap:9px; align-items:flex-start; font-size:13px; line-height:1.4; }
-      .check b { color:var(--tomato); }
-      .actions { display:flex; gap:9px; margin-top:22px; flex-wrap:wrap; }
-      .primary, .secondary { padding:12px 15px; border-radius:11px; font-weight:600; border:0; font-size:14px; }
-      .primary { background:var(--tomato); color:#fff; }
-      .primary:hover { background:var(--tomato-deep); }
-      .secondary { background:transparent; color:var(--ink); border:1px solid var(--line); }
-      .report { margin:65px 0; padding:37px; background:var(--ink); color:var(--white); border-radius:25px; display:grid; grid-template-columns:1.05fr .95fr; gap:45px; align-items:center; }
-      .report h2 { font-size:30px; letter-spacing:-.06em; margin:12px 0; }
-      .report p { color:rgba(255,255,255,.68); line-height:1.6; font-size:15px; margin:0; }
-      .form { display:flex; flex-wrap:wrap; gap:9px; }
-      .form input { min-width:0; flex:1 1 210px; background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.26); border-radius:11px; padding:13px 14px; color:#fff; outline:none; }
-      .form input::placeholder { color:rgba(255,255,255,.5); }
-      .form button { padding:13px 17px; border:0; border-radius:11px; background:var(--sun); color:var(--ink); font-weight:700; }
-      .consent { font-size:11px; line-height:1.55; color:rgba(255,255,255,.48); margin-top:12px; }
-      .notice { display:none; margin-top:12px; font-size:13px; color:var(--sun); }
-      footer { border-top:1px solid var(--line); padding:24px 0 34px; display:flex; justify-content:space-between; color:var(--muted); font-size:12px; }
-      .ad-slot { margin-top:34px; border-top:1px dashed var(--line); padding-top:14px; font-size:11px; color:#968e84; }
-      .ad-slot span { font-family:"DM Mono", monospace; text-transform:uppercase; letter-spacing:.08em; }
-      @media (max-width:760px) { .shell{padding:0 18px} nav a:not(.nav-pill){display:none} header{height:66px}.hero{grid-template-columns:1fr;padding:52px 0 38px;gap:26px}.hero-side{border-left:0;border-top:1px solid var(--line);padding:20px 0 0}.puzzle-copy{display:block}.puzzle-copy p{margin-top:12px}.puzzle-tray{display:grid;grid-template-columns:1fr 1fr}.puzzle-tray .puzzle-piece{width:100%;min-height:78px}.puzzle-tray .puzzle-piece:last-child{grid-column:1 / -1}.rail{grid-template-columns:1fr 1fr;border-radius:18px}.stage{min-height:174px;border-bottom:1px solid var(--line)}.stage:nth-child(2){border-right:0}.stage:last-child{border-bottom:0}.stage h3{margin-top:28px}.detail,.report{grid-template-columns:1fr}.detail-aside{border-left:0;border-top:1px solid var(--line)}.detail-main,.detail-aside,.report{padding:25px}.journey-head span{display:none}footer{flex-direction:column;gap:8px} }
+      .stage:hover,.stage.active { background:var(--tomato); color:#fff; }
+      .stage-no { font:500 10px "DM Mono",monospace; color:var(--tomato); }
+      .stage:hover .stage-no,.stage.active .stage-no { color:var(--sun); }
+      .stage h3 { margin:48px 0 8px; font-size:18px; letter-spacing:-.05em; }
+      .stage p { margin:0; color:var(--muted); font-size:12px; line-height:1.5; }
+      .stage:hover p,.stage.active p { color:rgba(255,255,255,.72); }
+      .stage-arrow { position:absolute; right:18px; bottom:17px; }
+      .journey-unlocked .stage { animation:stage-in .48s both; }
+      .journey-unlocked .stage:nth-child(2){animation-delay:.09s}.journey-unlocked .stage:nth-child(3){animation-delay:.18s}.journey-unlocked .stage:nth-child(4){animation-delay:.27s}.journey-unlocked .stage:nth-child(5){animation-delay:.36s}
+      @keyframes stage-in { from{opacity:0;transform:translateY(18px)} to{opacity:1;transform:none} }
+      .detail { margin-top:14px; display:grid; grid-template-columns:1.2fr 1fr; min-height:226px; overflow:hidden; border:1px solid var(--line); border-radius:22px; background:var(--white); }
+      .detail-main,.detail-side { padding:30px 32px; }
+      .detail-main h2 { margin:10px 0; font-size:25px; letter-spacing:-.055em; }
+      .detail-main p { margin:0; max-width:550px; color:var(--muted); font-size:14px; line-height:1.64; }
+      .detail-side { border-left:1px solid var(--line); background:#efe4d3; }
+      .detail-side h3 { margin:5px 0 14px; font-size:13px; }
+      .check { display:flex; gap:8px; margin:9px 0; font-size:13px; }.check b{color:var(--tomato);}
+      .actions { display:flex; gap:8px; margin-top:20px; }
+      .primary,.secondary { display:inline-block; padding:11px 14px; border-radius:10px; border:0; font-size:13px; font-weight:700; text-decoration:none; }
+      .primary { background:var(--tomato); color:#fff; }.secondary{background:transparent;color:var(--ink);border:1px solid var(--line);}
+      .report { margin:64px 0; padding:35px; display:grid; grid-template-columns:1.05fr .95fr; gap:42px; align-items:center; border-radius:24px; background:var(--ink); color:#fff; }
+      .report h2 { margin:10px 0; font-size:29px; letter-spacing:-.055em; }.report p{margin:0;color:rgba(255,255,255,.68);font-size:14px;line-height:1.6;}
+      .form { display:flex; gap:8px; }.form input{min-width:0;flex:1;padding:13px;border:1px solid rgba(255,255,255,.28);border-radius:10px;background:rgba(255,255,255,.09);color:#fff;}.form button{padding:13px 15px;border:0;border-radius:10px;background:var(--sun);font-weight:700;}
+      .consent{margin-top:10px;color:rgba(255,255,255,.45);font-size:10px;line-height:1.5}.notice{display:none;margin-top:10px;color:var(--sun);font-size:12px}
+      .ad-slot{margin-top:32px;padding-top:13px;border-top:1px dashed rgba(40,37,33,.24);color:var(--muted);font-size:10px}.ad-slot span{font-family:"DM Mono",monospace;letter-spacing:.07em}
+      footer{display:flex;justify-content:space-between;padding:23px 0 32px;color:var(--muted);font-size:11px}
+
+      @media (max-width:900px) {
+        .game-hero{grid-template-columns:1fr;gap:30px;padding-top:44px}.game-copy h1{max-width:650px}.game-copy>p{max-width:600px}.game-area{grid-template-columns:1fr}.pizza-board{max-width:430px}.piece-tray{grid-template-columns:repeat(5,1fr)}.pizza-piece{display:block;text-align:center;padding:7px}.piece-icon{width:50px}.piece-meta b{font-size:11px}.rail{grid-template-columns:1fr 1fr}.stage{border-bottom:1px solid var(--line)}.detail,.report{grid-template-columns:1fr}.detail-side{border-left:0;border-top:1px solid var(--line)}
+      }
+      @media (max-width:620px) {
+        .shell{width:min(100% - 32px,1180px)}header{height:64px}nav a:not(.nav-pill){display:none}.game-hero{min-height:auto;padding:38px 0 50px}.game-copy h1{font-size:42px}.game-panel{padding:16px;border-radius:22px}.piece-tray{grid-template-columns:repeat(3,1fr)}.pizza-piece:nth-child(4),.pizza-piece:nth-child(5){grid-column:auto}.journey-head{display:block}.journey-head p{margin-top:9px}.rail{grid-template-columns:1fr}.stage{min-height:145px;border-right:0}.stage h3{margin-top:26px}.detail-main,.detail-side,.report{padding:24px}.form{display:grid}footer{display:grid;gap:7px}
+      }
+      @media (prefers-reduced-motion:reduce) { *,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;transition-duration:.01ms!important;} }
     </style>
   </head>
-  <body>
+  <body class="progress-0 game-running">
     <main class="shell">
       <header>
         <div class="brand">sourcing<i>:</i> map</div>
-        <nav><a href="#journey">소싱 여정</a><a href="#report">맞춤 리포트</a><a class="nav-pill" href="#journey">지금 시작하기</a></nav>
+        <nav><a href="#game">30초 게임</a><a href="#journey">소싱 여정</a><a class="nav-pill" href="#game">게임 시작</a></nav>
       </header>
 
-      <section class="hero">
-        <div>
-          <div class="eyebrow">The first map for new sellers</div>
-          <h1>소싱의 처음부터<br /><em>판매의 순간까지.</em></h1>
-          <p>상품을 찾는 일부터 배대지, 통관, 보관까지. 지금 궁금한 단계에서 시작해 필요한 정보만 차례대로 확인하세요.</p>
+      <section class="game-hero" id="game">
+        <div class="game-copy">
+          <div class="eyebrow">30-second sourcing game</div>
+          <h1>피자 한 판으로<br /><em>소싱을 시작해요.</em></h1>
+          <p>다섯 조각은 상품 탐색부터 판매까지의 여정입니다. 조각의 방향은 이미 정해져 있어요. 알맞은 자리를 찾아 한 조각씩 피자를 완성해보세요.</p>
+          <div class="rule-card"><strong>게임 방법</strong><span>조각을 선택한 뒤 피자의 빈자리를 누르세요. 맞을 때마다 사이트 전체의 색이 변하고, 다섯 조각을 완성하면 소싱 리포트가 열립니다.</span></div>
         </div>
-        <aside class="hero-side">
-          <div class="micro">A calm way to start</div>
-          <strong>모든 것을 지금 결정할 필요는 없어요.</strong>
-          <p>단계별로 읽고, 내 상황에 맞을 때만 다음으로 넘어가면 됩니다.</p>
-          <div class="current"><div class="micro">today's first step</div><h2>무엇을 팔지부터 살펴볼까요?</h2><p>상품을 정하지 못했어도 괜찮습니다. 후보를 찾는 법부터 안내할게요.</p></div>
-        </aside>
+
+        <div class="game-panel">
+          <div class="game-status"><strong id="game-count">0 / 5 SLICES</strong><span class="lives" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span></div>
+          <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+          <div class="game-area">
+            <div class="pizza-wrap" id="pizza-wrap">
+              <div class="pizza-shadow"></div>
+              <span class="win-stamp">JOURNEY UNLOCKED</span>
+              <svg class="pizza-board" id="pizza-board" viewBox="0 0 300 300" role="group" aria-label="다섯 조각 피자 퍼즐판">
+                <circle class="pizza-base" cx="150" cy="150" r="139" />
+                <path class="pizza-slot" data-slot="1" tabindex="0" role="button" aria-label="피자 1번 자리" d="M150 150 L150 18 A132 132 0 0 1 275.55 109.21 Z" />
+                <path class="pizza-slot" data-slot="2" tabindex="0" role="button" aria-label="피자 2번 자리" d="M150 150 L275.55 109.21 A132 132 0 0 1 227.59 256.79 Z" />
+                <path class="pizza-slot" data-slot="3" tabindex="0" role="button" aria-label="피자 3번 자리" d="M150 150 L227.59 256.79 A132 132 0 0 1 72.41 256.79 Z" />
+                <path class="pizza-slot" data-slot="4" tabindex="0" role="button" aria-label="피자 4번 자리" d="M150 150 L72.41 256.79 A132 132 0 0 1 24.45 109.21 Z" />
+                <path class="pizza-slot" data-slot="5" tabindex="0" role="button" aria-label="피자 5번 자리" d="M150 150 L24.45 109.21 A132 132 0 0 1 150 18 Z" />
+                <text class="pizza-label" data-label="1" x="198" y="83">01</text>
+                <text class="pizza-label" data-label="2" x="225" y="183">02</text>
+                <text class="pizza-label" data-label="3" x="150" y="234">03</text>
+                <text class="pizza-label" data-label="4" x="75" y="183">04</text>
+                <text class="pizza-label" data-label="5" x="102" y="83">05</text>
+                <g class="topping">
+                  <circle cx="150" cy="55" r="11" fill="#b9402d"/><circle cx="239" cy="126" r="10" fill="#8c4938"/><circle cx="205" cy="221" r="11" fill="#b9402d"/><circle cx="96" cy="219" r="10" fill="#8c4938"/><circle cx="61" cy="127" r="11" fill="#b9402d"/>
+                  <circle cx="176" cy="107" r="6" fill="#6e8a68"/><circle cx="188" cy="187" r="6" fill="#6e8a68"/><circle cx="111" cy="179" r="6" fill="#6e8a68"/>
+                </g>
+              </svg>
+            </div>
+
+            <div class="piece-tray" id="piece-tray" aria-label="피자 조각">
+              <button class="pizza-piece" data-piece="4" draggable="true"><svg class="piece-icon" viewBox="0 0 300 300" aria-hidden="true"><circle class="mini-base" cx="150" cy="150" r="132"/><path class="mini-wedge" d="M150 150 L72.41 256.79 A132 132 0 0 1 24.45 109.21 Z"/></svg><span class="piece-meta"><small>04</small><b>수입 준비</b></span></button>
+              <button class="pizza-piece" data-piece="1" draggable="true"><svg class="piece-icon" viewBox="0 0 300 300" aria-hidden="true"><circle class="mini-base" cx="150" cy="150" r="132"/><path class="mini-wedge" d="M150 150 L150 18 A132 132 0 0 1 275.55 109.21 Z"/></svg><span class="piece-meta"><small>01</small><b>상품 찾기</b></span></button>
+              <button class="pizza-piece" data-piece="5" draggable="true"><svg class="piece-icon" viewBox="0 0 300 300" aria-hidden="true"><circle class="mini-base" cx="150" cy="150" r="132"/><path class="mini-wedge" d="M150 150 L24.45 109.21 A132 132 0 0 1 150 18 Z"/></svg><span class="piece-meta"><small>05</small><b>입고·판매</b></span></button>
+              <button class="pizza-piece" data-piece="2" draggable="true"><svg class="piece-icon" viewBox="0 0 300 300" aria-hidden="true"><circle class="mini-base" cx="150" cy="150" r="132"/><path class="mini-wedge" d="M150 150 L275.55 109.21 A132 132 0 0 1 227.59 256.79 Z"/></svg><span class="piece-meta"><small>02</small><b>상품성 검증</b></span></button>
+              <button class="pizza-piece" data-piece="3" draggable="true"><svg class="piece-icon" viewBox="0 0 300 300" aria-hidden="true"><circle class="mini-base" cx="150" cy="150" r="132"/><path class="mini-wedge" d="M150 150 L227.59 256.79 A132 132 0 0 1 72.41 256.79 Z"/></svg><span class="piece-meta"><small>03</small><b>소싱·배송</b></span></button>
+            </div>
+          </div>
+          <p class="game-message" id="game-message">조각 하나를 골라 피자의 같은 방향 빈칸에 놓아보세요.</p>
+          <a class="unlock-link" href="#journey">완성된 소싱 여정 보기 ↓</a>
+        </div>
       </section>
 
-      <section class="journey" id="journey">
-        <div class="puzzle-intro" id="puzzle-intro">
-          <div class="micro">Puzzle the path</div>
-          <div class="puzzle-copy"><h2>소싱의 순서를<br />조각으로 맞춰보세요.</h2><p>아래 조각을 1번부터 차례대로 눌러 빈칸에 놓아보세요. 다섯 조각이 이어지면 나의 소싱 여정이 열립니다.</p></div>
-          <div class="puzzle-board-wrap"><div class="puzzle-board" id="puzzle-board" aria-label="소싱 여정 퍼즐판">
-            <div class="puzzle-slot current-slot" data-slot="1">01</div><div class="puzzle-slot" data-slot="2">02</div><div class="puzzle-slot" data-slot="3">03</div><div class="puzzle-slot" data-slot="4">04</div><div class="puzzle-slot" data-slot="5">05</div>
-          </div></div>
-          <div class="puzzle-status"><span id="puzzle-count">0 / 5 조각 연결</span><span class="progress-dots" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span></div>
-          <div class="puzzle-tray" id="puzzle-tray" aria-label="소싱 여정 퍼즐 조각">
-            <button class="puzzle-piece piece-3" data-piece="3" draggable="true"><svg class="piece-shape" viewBox="0 0 240 120" preserveAspectRatio="none" aria-hidden="true"><path d="M0 32H40V0H200V32H240V76H200V120H40V76H0Z" /></svg><span class="piece-no">03</span><span class="piece-name">소싱·배송</span></button>
-            <button class="puzzle-piece piece-1" data-piece="1" draggable="true"><svg class="piece-shape" viewBox="0 0 240 120" preserveAspectRatio="none" aria-hidden="true"><path d="M0 0H200V32H240V76H200V120H0Z" /></svg><span class="piece-no">01</span><span class="piece-name">상품 찾기</span></button>
-            <button class="puzzle-piece piece-5" data-piece="5" draggable="true"><svg class="piece-shape" viewBox="0 0 240 120" preserveAspectRatio="none" aria-hidden="true"><path d="M0 32H40V0H200V120H40V76H0Z" /></svg><span class="piece-no">05</span><span class="piece-name">입고·판매</span></button>
-            <button class="puzzle-piece piece-2" data-piece="2" draggable="true"><svg class="piece-shape" viewBox="0 0 240 120" preserveAspectRatio="none" aria-hidden="true"><path d="M0 32H40V0H200V32H160V76H200V120H40V76H0Z" /></svg><span class="piece-no">02</span><span class="piece-name">상품성 검증</span></button>
-            <button class="puzzle-piece piece-4" data-piece="4" draggable="true"><svg class="piece-shape" viewBox="0 0 240 120" preserveAspectRatio="none" aria-hidden="true"><path d="M0 32H40V0H200V32H160V76H200V120H40V76H0Z" /></svg><span class="piece-no">04</span><span class="piece-name">수입 준비</span></button>
-          </div>
-          <p class="puzzle-note" id="puzzle-note">첫 조각은 <b>상품 찾기</b>예요. 조각을 선택해 퍼즐판에 놓아보세요.</p>
+      <section class="journey-map" id="journey">
+        <div class="journey-head"><div><div class="micro">Your sourcing map</div><h2>완성된 소싱 여정</h2></div><p>게임에서 맞춘 다섯 조각이 실제 소싱의 다섯 단계입니다. 지금 필요한 단계부터 가볍게 열어보세요.</p></div>
+        <div class="rail" id="rail">
+          <button class="stage active" data-index="0"><span class="stage-no">01</span><h3>상품 찾기</h3><p>트렌드와 고객 불만에서 후보를 찾습니다.</p><span class="stage-arrow">↗</span></button>
+          <button class="stage" data-index="1"><span class="stage-no">02</span><h3>상품성 검증</h3><p>수요·경쟁·총원가를 확인합니다.</p><span class="stage-arrow">↗</span></button>
+          <button class="stage" data-index="2"><span class="stage-no">03</span><h3>소싱·배송</h3><p>공급처와 배대지·포워딩을 비교합니다.</p><span class="stage-arrow">↗</span></button>
+          <button class="stage" data-index="3"><span class="stage-no">04</span><h3>수입 준비</h3><p>관세·인증·통관 서류를 점검합니다.</p><span class="stage-arrow">↗</span></button>
+          <button class="stage" data-index="4"><span class="stage-no">05</span><h3>입고·판매</h3><p>보관·출고·가격과 재주문을 관리합니다.</p><span class="stage-arrow">↗</span></button>
         </div>
-        <div class="journey-map" id="journey-map">
-          <div class="journey-head"><h2>나의 소싱 여정</h2><span>카드를 눌러 지금 필요한 리포트를 열어보세요.</span></div>
-          <div class="rail" id="rail">
-          <button class="stage active" data-index="0"><span class="stage-number">01<i class="stage-dot"></i></span><h3>상품 찾기</h3><p>무엇을 팔지 아직 정하지 못했어요.</p><span class="stage-arrow">↗</span></button>
-          <button class="stage" data-index="1"><span class="stage-number">02<i class="stage-dot"></i></span><h3>상품성 검증</h3><p>이 상품을 실제로 팔아도 될지 궁금해요.</p><span class="stage-arrow">↗</span></button>
-          <button class="stage" data-index="2"><span class="stage-number">03<i class="stage-dot"></i></span><h3>소싱·배송</h3><p>배대지와 포워딩 중 무엇이 맞을지 모르겠어요.</p><span class="stage-arrow">↗</span></button>
-          <button class="stage" data-index="3"><span class="stage-number">04<i class="stage-dot"></i></span><h3>수입 준비</h3><p>관세, 인증, 통관에서 실수할까 걱정돼요.</p><span class="stage-arrow">↗</span></button>
-          <button class="stage" data-index="4"><span class="stage-number">05<i class="stage-dot"></i></span><h3>입고·판매</h3><p>들여온 뒤 보관과 출고는 어떻게 할지 궁금해요.</p><span class="stage-arrow">↗</span></button>
-        </div>
-          <article class="detail" id="detail" aria-live="polite">
+        <article class="detail" id="detail" aria-live="polite">
           <div class="detail-main"><div class="micro">상품 탐색 리포트</div><h2>상품 찾기, 여기서부터 알아볼게요.</h2><p>관심이 모이는 상품을 찾는 데서 시작해요. 검색 추이, 가격대, 리뷰의 불만을 보고 후보를 천천히 좁혀볼 수 있습니다.</p><div class="actions"><a class="primary" href="#report">후보 상품 살펴보기 →</a><button class="secondary">트렌드 읽는 법</button></div></div>
-          <div class="detail-aside"><div class="micro">Before you move on</div><h3>이것만 먼저 확인해요</h3><div class="checks"><div class="check"><b>✓</b><span>가격대와 판매자 수를 먼저 비교해요</span></div><div class="check"><b>✓</b><span>리뷰에서 반복되는 불만을 찾아요</span></div><div class="check"><b>✓</b><span>바로 구매하지 말고 후보를 3개 남겨요</span></div></div></div>
-          </article>
-        </div>
+          <div class="detail-side"><div class="micro">Before you move on</div><h3>이것만 먼저 확인해요</h3><div class="check"><b>✓</b><span>가격대와 판매자 수를 비교해요</span></div><div class="check"><b>✓</b><span>반복되는 리뷰 불만을 찾아요</span></div><div class="check"><b>✓</b><span>후보 상품을 세 개 남겨요</span></div></div>
+        </article>
       </section>
 
       <section class="report" id="report">
-        <div><div class="micro" style="color:var(--sun)">When you are ready</div><h2>내 상황에 맞는<br />소싱·물류 리포트</h2><p>중국·베트남 소싱을 준비 중이라면, 상품·물량·현재 단계를 기준으로 다음에 확인할 정보를 정리해 메일로 보내드립니다.</p></div>
-        <div><form class="form" id="report-form"><input aria-label="이메일" type="email" placeholder="이메일 주소" required /><button type="submit">리포트 받아보기</button></form><div class="consent">리포트 발송을 위해 이메일을 수집합니다. 광고성 정보 수신은 별도 동의 후에만 발송됩니다.</div><div class="notice" id="notice">리포트 요청을 받았어요. 입력한 이메일로 준비 소식을 보내드릴게요.</div></div>
+        <div><div class="micro" style="color:var(--sun)">When you are ready</div><h2>내 상황에 맞는<br />소싱·물류 리포트</h2><p>중국·베트남 소싱을 준비 중이라면 상품, 물량, 현재 단계를 기준으로 다음에 확인할 정보를 정리해 보내드립니다.</p></div>
+        <div><form class="form" id="report-form"><input aria-label="이메일" type="email" placeholder="이메일 주소" required /><button type="submit">리포트 받아보기</button></form><div class="consent">리포트 발송을 위해 이메일을 수집합니다. 광고성 정보는 별도 동의 후에만 발송됩니다.</div><div class="notice" id="notice">리포트 요청을 받았어요. 입력한 이메일로 준비 소식을 보내드릴게요.</div></div>
       </section>
 
-      <div class="ad-slot"><span>Advertisement</span> · 관련 서비스 광고는 가이드 내용과 명확히 구분되어 표시됩니다.</div>
+      <div class="ad-slot"><span>ADVERTISEMENT</span> · 관련 서비스 광고는 가이드와 구분해 표시됩니다.</div>
       <footer><span>© 2026 Sourcing Map</span><span>상품성 · 배송 · 통관 · 보관을 한 흐름으로</span></footer>
     </main>
 
     <script>
-      const stages = [
-        { num:'01', title:'상품 찾기', short:'무엇을 팔지 아직 정하지 못했어요.', tag:'상품 탐색 리포트', text:'관심이 모이는 상품을 찾는 데서 시작해요. 검색 추이, 가격대, 리뷰의 불만을 보고 후보를 천천히 좁혀볼 수 있습니다.', checks:['가격대와 판매자 수를 먼저 비교해요','리뷰에서 반복되는 불만을 찾아요','바로 구매하지 말고 후보를 3개 남겨요'], action:'후보 상품 살펴보기', secondary:'트렌드 읽는 법'},
-        { num:'02', title:'상품성 검증', short:'이 상품을 실제로 팔아도 될지 궁금해요.', tag:'판매 가능성 리포트', text:'후보를 찾았다면 수요, 경쟁, 예상 마진을 차례로 확인합니다. 최종 상품성 판단은 소싱 판결사 같은 전문 분석 도구에서 이어갈 수 있어요.', checks:['매입가 외 배송·관세·수수료를 포함해요','경쟁 상품의 가격 폭을 살펴봐요','판매 가능성 분석으로 근거를 보강해요'], action:'판매 가능성 분석하기', secondary:'총원가 체크리스트'},
-        { num:'03', title:'소싱·배송', short:'배대지와 포워딩 중 무엇이 맞을지 모르겠어요.', tag:'배송 방식 리포트', text:'샘플과 소량은 배대지, 반복 수입과 박스 단위 물량은 포워딩이 더 맞을 수 있습니다. 상품의 부피와 수량을 기준으로 방식부터 비교해보세요.', checks:['실중량과 부피무게를 함께 확인해요','여러 공급처라면 합배송 필요를 체크해요','견적에는 고정 부대비용까지 포함해요'], action:'배송 방식 비교하기', secondary:'CBM 쉽게 이해하기'},
-        { num:'04', title:'수입 준비', short:'관세, 인증, 통관에서 실수할까 걱정돼요.', tag:'통관·인증 리포트', text:'수입 전에는 품목별 인증과 통관 주의사항을 미리 살펴보는 것이 중요합니다. 확정 판단이 필요한 항목은 관세사나 인증 기관에 확인하세요.', checks:['HS 코드와 관부가세를 추정해요','KC·식품·화장품 등 품목별 규제를 확인해요','인보이스와 패킹리스트를 미리 점검해요'], action:'수입 전 체크하기', secondary:'통관 용어 보기'},
-        { num:'05', title:'입고·판매', short:'들여온 뒤 보관과 출고는 어떻게 할지 궁금해요.', tag:'입고·판매 리포트', text:'첫 입고 뒤에는 보관비와 출고비, 판매 채널 수수료까지 포함해 다시 마진을 확인합니다. 물량이 늘면 창고·풀필먼트 상담을 검토할 수 있어요.', checks:['보관료·입출고비를 분리해 비교해요','판매가와 목표 마진을 다시 계산해요','재주문 기준을 간단히 기록해요'], action:'보관·출고 알아보기', secondary:'마진 계산하기'}
-      ];
-      const rail = document.getElementById('rail'); const detail = document.getElementById('detail'); let selected = 0;
-      function render() {
-        rail.innerHTML = stages.map((s,i) => `<button class="stage ${i===selected?'active':''}" data-index="${i}"><span class="stage-number">${s.num}<i class="stage-dot"></i></span><h3>${s.title}</h3><p>${s.short}</p><span class="stage-arrow">↗</span></button>`).join('');
-        const s=stages[selected]; detail.innerHTML = `<div class="detail-main"><div class="micro">${s.tag}</div><h2>${s.title}, 여기서부터 알아볼게요.</h2><p>${s.text}</p><div class="actions"><button class="primary" id="primary-action">${s.action} →</button><button class="secondary">${s.secondary}</button></div></div><div class="detail-aside"><div class="micro">Before you move on</div><h3>이것만 먼저 확인해요</h3><div class="checks">${s.checks.map(x=>`<div class="check"><b>✓</b><span>${x}</span></div>`).join('')}</div></div>`;
-        document.querySelectorAll('.stage').forEach(btn=>btn.addEventListener('click',()=>{selected=Number(btn.dataset.index);render(); detail.scrollIntoView({behavior:'smooth',block:'nearest'}); }));
-        document.getElementById('primary-action').addEventListener('click',()=>{document.getElementById('report').scrollIntoView({behavior:'smooth',block:'center'});});
-      }
-      render();
-      document.getElementById('report-form').addEventListener('submit', e=>{e.preventDefault(); document.getElementById('notice').style.display='block'; e.target.reset();});
-
-      const puzzleNames = ['','상품 찾기','상품성 검증','소싱·배송','수입 준비','입고·판매'];
-      const puzzleBoard = document.getElementById('puzzle-board');
-      const puzzleNote = document.getElementById('puzzle-note');
-      const puzzleCount = document.getElementById('puzzle-count');
-      const puzzleDots = document.querySelectorAll('.progress-dots i');
+      const stepNames = ['','상품 찾기','상품성 검증','소싱·배송','수입 준비','입고·판매'];
+      const pieces = [...document.querySelectorAll('.pizza-piece')];
+      const slots = [...document.querySelectorAll('.pizza-slot')];
+      const labels = [...document.querySelectorAll('.pizza-label')];
+      const dots = [...document.querySelectorAll('.lives i')];
+      const message = document.getElementById('game-message');
+      const count = document.getElementById('game-count');
+      const progressFill = document.getElementById('progress-fill');
+      const pizzaBoard = document.getElementById('pizza-board');
+      const pizzaWrap = document.getElementById('pizza-wrap');
       let selectedPiece = null;
-      let nextPiece = 1;
-      document.body.classList.add('puzzle-active');
+      let completed = 0;
 
-      function updatePuzzleNote(message, complete=false) {
-        puzzleNote.innerHTML = message;
-        puzzleNote.classList.toggle('complete', complete);
-      }
-      function updatePuzzleProgress(count) {
-        puzzleCount.textContent = `${count} / 5 조각 연결`;
-        puzzleDots.forEach((dot, index) => dot.classList.toggle('filled', index < count));
-      }
-      function selectPuzzlePiece(piece) {
-        document.querySelectorAll('.puzzle-piece').forEach(item => item.classList.remove('selected'));
+      function setSelected(piece) {
+        if (piece.classList.contains('used')) return;
+        pieces.forEach(item => item.classList.remove('selected'));
         selectedPiece = piece;
         piece.classList.add('selected');
-        updatePuzzleNote(`<b>${piece.dataset.piece}번 ${puzzleNames[piece.dataset.piece]}</b> 조각을 골랐어요. 퍼즐판의 ${String(nextPiece).padStart(2, '0')} 칸을 눌러 놓아보세요.`);
+        const number = piece.dataset.piece;
+        slots.forEach(slot => slot.classList.toggle('target', slot.dataset.slot === number && !slot.classList.contains('filled')));
+        message.innerHTML = `<b>${number}번 ${stepNames[number]}</b> 조각을 골랐어요. 같은 방향의 빈자리를 찾아보세요.`;
       }
-      function placePuzzlePiece(piece, slot) {
-        const pieceNumber = Number(piece.dataset.piece);
-        if (pieceNumber !== nextPiece || Number(slot.dataset.slot) !== nextPiece) {
-          piece.classList.remove('selected');
-          piece.classList.add('wrong');
-          updatePuzzleNote(`다음은 <b>${String(nextPiece).padStart(2, '0')} ${puzzleNames[nextPiece]}</b> 단계예요. 이 흐름부터 맞춰볼까요?`);
-          window.setTimeout(() => piece.classList.remove('wrong'), 360);
+
+      function pulseScene() {
+        document.body.classList.add('reward-flash');
+        window.setTimeout(() => document.body.classList.remove('reward-flash'), 580);
+      }
+
+      function updateScene() {
+        for (let i=0; i<=5; i+=1) document.body.classList.remove(`progress-${i}`);
+        document.body.classList.add(`progress-${completed}`);
+        count.textContent = `${completed} / 5 SLICES`;
+        progressFill.style.width = `${completed * 20}%`;
+        dots.forEach((dot,index) => dot.classList.toggle('on',index < completed));
+      }
+
+      function tryPlace(slot) {
+        if (!selectedPiece || slot.classList.contains('filled')) return;
+        const pieceNumber = selectedPiece.dataset.piece;
+        if (pieceNumber !== slot.dataset.slot) {
+          selectedPiece.classList.add('wrong');
+          slot.classList.add('wrong');
+          message.innerHTML = `모양의 방향이 달라요. <b>${pieceNumber}번 조각</b>이 향하는 위치를 다시 살펴보세요.`;
+          window.setTimeout(() => { selectedPiece?.classList.remove('wrong'); slot.classList.remove('wrong'); },380);
           return;
         }
-        slot.textContent = '';
-        slot.classList.remove('current-slot');
-        slot.appendChild(piece);
-        piece.classList.remove('selected');
-        piece.classList.add('locked');
-        piece.draggable = false;
+        slot.classList.add('filled');
+        slot.classList.remove('target');
+        slot.setAttribute('tabindex','-1');
+        const label = labels.find(item => item.dataset.label === pieceNumber);
+        if (label) label.classList.add('on');
+        selectedPiece.classList.remove('selected');
+        selectedPiece.classList.add('used');
+        selectedPiece.draggable = false;
         selectedPiece = null;
-        nextPiece += 1;
-        updatePuzzleProgress(nextPiece - 1);
-        const followingSlot = puzzleBoard.querySelector(`[data-slot="${nextPiece}"]`);
-        if (followingSlot) followingSlot.classList.add('current-slot');
-        if (nextPiece === 6) {
-          updatePuzzleNote(`<b>소싱의 흐름이 완성됐어요.</b> 이제 각 단계에서 필요한 리포트를 차례로 살펴볼 수 있어요.`, true);
-          puzzleBoard.classList.add('complete');
-          document.body.classList.remove('puzzle-active');
-          document.body.classList.add('journey-done');
+        completed += 1;
+        updateScene();
+        pulseScene();
+        if (completed === 5) {
+          pizzaBoard.classList.add('complete');
+          pizzaWrap.classList.add('won');
+          document.body.classList.remove('game-running');
+          document.body.classList.add('game-complete','journey-unlocked');
+          message.innerHTML = '<b>피자와 소싱 지도가 완성됐어요!</b> 아래에서 각 단계의 리포트를 열어보세요.';
           return;
         }
-        updatePuzzleNote(`<b>${String(nextPiece).padStart(2, '0')} ${puzzleNames[nextPiece]}</b> 조각을 찾아 다음 칸에 놓아보세요.`);
+        message.innerHTML = `<b>정답이에요.</b> 배경이 한 단계 변했어요. 이제 ${5-completed}조각 남았습니다.`;
       }
-      document.querySelectorAll('#puzzle-tray .puzzle-piece').forEach(piece => {
-        piece.addEventListener('click', () => selectPuzzlePiece(piece));
-        piece.addEventListener('dragstart', event => { event.dataTransfer.setData('text/plain', piece.dataset.piece); selectPuzzlePiece(piece); });
+
+      pieces.forEach(piece => {
+        piece.addEventListener('click',()=>setSelected(piece));
+        piece.addEventListener('dragstart',event=>{ setSelected(piece); event.dataTransfer.setData('text/plain',piece.dataset.piece); });
       });
-      document.querySelectorAll('.puzzle-slot').forEach(slot => {
-        slot.addEventListener('click', () => { if (selectedPiece) placePuzzlePiece(selectedPiece, slot); });
-        slot.addEventListener('dragover', event => event.preventDefault());
-        slot.addEventListener('drop', event => {
+      slots.forEach(slot => {
+        slot.addEventListener('click',()=>tryPlace(slot));
+        slot.addEventListener('keydown',event=>{ if(event.key==='Enter'||event.key===' '){event.preventDefault();tryPlace(slot);} });
+        slot.addEventListener('dragover',event=>event.preventDefault());
+        slot.addEventListener('drop',event=>{
           event.preventDefault();
-          const piece = document.querySelector(`#puzzle-tray [data-piece="${event.dataTransfer.getData('text/plain')}"]`);
-          if (piece) placePuzzlePiece(piece, slot);
+          const piece=pieces.find(item=>item.dataset.piece===event.dataTransfer.getData('text/plain'));
+          if(piece){setSelected(piece);tryPlace(slot);}
         });
+      });
+
+      const reports = [
+        {tag:'상품 탐색 리포트',title:'상품 찾기, 여기서부터 알아볼게요.',text:'관심이 모이는 상품을 찾는 데서 시작해요. 검색 추이, 가격대, 리뷰의 불만을 보고 후보를 천천히 좁혀볼 수 있습니다.',checks:['가격대와 판매자 수를 비교해요','반복되는 리뷰 불만을 찾아요','후보 상품을 세 개 남겨요'],action:'후보 상품 살펴보기'},
+        {tag:'판매 가능성 리포트',title:'팔릴 근거를 하나씩 확인해요.',text:'후보를 찾았다면 수요, 경쟁, 예상 마진을 차례로 확인합니다. 최종 판단은 소싱 판결사 같은 전문 분석 도구에서 이어갈 수 있어요.',checks:['배송·관세·수수료까지 포함해요','경쟁 상품의 가격 폭을 살펴봐요','상품성 분석으로 근거를 보강해요'],action:'판매 가능성 분석하기'},
+        {tag:'배송 방식 리포트',title:'내 물량에 맞는 이동 방법을 골라요.',text:'샘플과 소량은 배대지, 반복 수입과 박스 물량은 포워딩이 더 맞을 수 있습니다. 부피와 수량을 기준으로 비교해보세요.',checks:['실중량과 부피무게를 확인해요','합배송이 필요한지 살펴봐요','고정 부대비용까지 견적에 넣어요'],action:'배송 방식 비교하기'},
+        {tag:'통관·인증 리포트',title:'들여오기 전에 위험을 확인해요.',text:'품목별 인증과 통관 주의사항을 미리 살펴봅니다. 확정 판단이 필요한 항목은 관세사나 인증기관의 검토를 연결해요.',checks:['HS 코드와 관부가세를 추정해요','품목별 인증 여부를 확인해요','인보이스와 패킹리스트를 점검해요'],action:'수입 전 체크하기'},
+        {tag:'입고·판매 리포트',title:'보관부터 재주문까지 연결해요.',text:'보관비와 출고비, 판매 채널 수수료까지 포함해 마진을 확인합니다. 물량이 늘면 창고·풀필먼트 상담을 검토할 수 있어요.',checks:['보관료와 입출고비를 나눠봐요','목표 마진으로 판매가를 계산해요','재주문 기준을 기록해요'],action:'보관·출고 알아보기'}
+      ];
+      const detail = document.getElementById('detail');
+      document.querySelectorAll('.stage').forEach((button,index)=>{
+        button.addEventListener('click',()=>{
+          document.querySelectorAll('.stage').forEach(item=>item.classList.remove('active'));
+          button.classList.add('active');
+          const report=reports[index];
+          detail.innerHTML=`<div class="detail-main"><div class="micro">${report.tag}</div><h2>${report.title}</h2><p>${report.text}</p><div class="actions"><a class="primary" href="#report">${report.action} →</a><button class="secondary">관련 용어 보기</button></div></div><div class="detail-side"><div class="micro">Before you move on</div><h3>이것만 먼저 확인해요</h3>${report.checks.map(item=>`<div class="check"><b>✓</b><span>${item}</span></div>`).join('')}</div>`;
+          detail.scrollIntoView({behavior:'smooth',block:'nearest'});
+        });
+      });
+      document.getElementById('report-form').addEventListener('submit',event=>{
+        event.preventDefault(); document.getElementById('notice').style.display='block'; event.target.reset();
       });
     </script>
   </body>
